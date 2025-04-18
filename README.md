@@ -100,8 +100,4 @@ The `agents` table stores information about the agents. The following fields are
 
 ## Contributing
 
-Contributions are welcome! Please open an issue or submit a pull request for any improvements or features.
-
-## License
-
-This project is licensed under the MIT License.
+No Contributions Allowed Up untill Now!
