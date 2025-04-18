@@ -1,61 +1,107 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# AM Properties Backend
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+## Overview
 
-## About Laravel
+This is the backend for the AM Properties project. The backend is built using Laravel and is designed to manage properties and agents.
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+## Features
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+-   User Management
+-   Agent Management
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Database Tables
 
-## Learning Laravel
+### Users Table
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+The `users` table stores information about the users of the application. The following fields are included:
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+-   `id`: Unique identifier for each user.
+-   `name`: The name of the user.
+-   `email`: The email address of the user (unique).
+-   `password`: The password for the user account.
+-   `first_name`: The first name of the user.
+-   `last_name`: The last name of the user.
+-   `phone`: The phone number of the user.
+-   `user_type`: The type of user (e.g., admin, regular user).
+-   `preferred_contact`: The preferred method of contact for the user.
+-   `profile_picture`: URL or path to the user's profile picture (nullable).
+-   `address`: The address of the user (nullable).
+-   `description`: A brief description about the user (nullable).
+-   `social_provider`: The provider for social login (nullable).
+-   `social_id`: The ID from the social provider (nullable).
+-   `created_at`: Timestamp for when the user was created.
+-   `updated_at`: Timestamp for when the user was last updated.
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Agents Table
 
-## Laravel Sponsors
+The `agents` table stores information about the agents. The following fields are included:
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+-   `id`: Unique identifier for each agent.
+-   `user_id`: Foreign key referencing the user associated with the agent.
+-   `agent_type`: The type of agent (nullable).
+-   `license_number`: Unique license number for the agent.
+-   `license_expiry`: Expiry date of the agent's license (nullable).
+-   `is_verified`: Boolean indicating if the agent is verified (default: false).
+-   `verification_docs`: Documents for verification (nullable).
+-   `created_at`: Timestamp for when the agent was created.
+-   `updated_at`: Timestamp for when the agent was last updated.
 
-### Premium Partners
+## Getting Started
 
-- **[Vehikl](https://vehikl.com/)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel/)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development/)**
-- **[Active Logic](https://activelogic.com)**
+1. Clone the repository:
+
+    ```bash
+    git clone <repository-url>
+    cd AM-Properties_Backend
+    ```
+
+2. Install dependencies:
+
+    ```bash
+    composer install
+    ```
+
+3. Set up your PostgreSQL database:
+
+    - Create a new PostgreSQL database:
+
+        ```sql
+        CREATE DATABASE am_properties;
+        ```
+
+    - Create a new user and grant privileges:
+
+        ```sql
+        CREATE USER your_username WITH PASSWORD 'your_password';
+        GRANT ALL PRIVILEGES ON DATABASE am_properties TO your_username;
+        ```
+
+4. Update your `.env` file with the database credentials:
+
+    ```env
+    DB_CONNECTION=pgsql
+    DB_HOST=127.0.0.1
+    DB_PORT=5432
+    DB_DATABASE=am_properties
+    DB_USERNAME=your_username
+    DB_PASSWORD=your_password
+    ```
+
+5. Run migrations to create the database tables:
+
+    ```bash
+    php artisan migrate
+    ```
+
+6. Start the server:
+    ```bash
+    php artisan serve
+    ```
 
 ## Contributing
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
-
-## Code of Conduct
-
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
-
-## Security Vulnerabilities
-
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+Contributions are welcome! Please open an issue or submit a pull request for any improvements or features.
 
 ## License
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+This project is licensed under the MIT License.
