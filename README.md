@@ -8,7 +8,7 @@ This is the backend for the AM Properties project. The backend is built using La
 
 - **Property Management:** The backend is designed to manage properties.
 - **Agent Management:** The backend is also designed to manage agents.
-- **Frontend** Frontend is Created on React.js with tailwindCSS and UI library with inertia.js for routing
+- **Frontend:** Frontend is Created on React.js with tailwindCSS and UI library with inertia.js for routing
 
 ## Getting Started
 
