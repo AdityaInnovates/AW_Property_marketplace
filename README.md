@@ -89,7 +89,7 @@ The following API endpoints are available:
 
 No Contributions Allowed Up untill Now!
 
-## API and Frontend Documentation
+## APIs and Frontend Integration
 
 ### Frontend Routes (routes/web.php):
 
