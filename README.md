@@ -88,3 +88,52 @@ The following API endpoints are available:
 ## Contributing
 
 No Contributions Allowed Up untill Now!
+
+## API and Frontend Documentation
+
+### Frontend Routes (routes/web.php):
+
+- `GET /` and `/users`: Render 'UsersPage' via Inertia.
+- `GET /properties`: Render 'ProperitesPage' via Inertia.
+- `GET /transactions`: Render 'DealsPage' via Inertia.
+- `GET /dashboard` (auth & verified middleware): Render 'dashboard' via Inertia.
+
+### API Resource Routes (routes/properties.php):
+
+- `/api/users` → `UserController` (RESTful resource routes)
+- `/api/properties` → `PropertyController` (RESTful resource routes)
+- `/api/deals` → `DealController` (RESTful resource routes)
+
+### Controllers and Their Methods:
+
+**a) UserController (app/Http/Controllers/Properties/UserController.php):**
+
+- `index()`: Returns JSON list of all users.
+- `show($id)`: Returns JSON of a single user by ID or 404 if not found.
+- `store(Request)`: Creates a new user from request data, returns JSON of created user.
+- `update(Request, $id)`: Validates and updates user by ID, returns updated user JSON or 404 if not found.
+- `destroy($id)`: Deletes user by ID or returns 404 if not found.
+
+**b) PropertyController (app/Http/Controllers/Properties/PropertyController.php):**
+
+- `index()`: Returns JSON list of all properties with related owner and address.
+- `show($id)`: Returns JSON of a single property by ID or 404 if not found.
+- `store(Request)`: Creates a new property from request data, returns JSON of created property.
+- `update(Request, $id)`: Updates property by ID, returns updated property JSON or 404 if not found.
+- `destroy($id)`: Deletes property by ID or returns 404 if not found.
+
+**c) DealController (app/Http/Controllers/Properties/DealController.php):**
+
+- `index()`: Returns JSON list of all deals with related agent.user, buyer.user, and property.
+- `show($id)`: Returns JSON of a single deal by ID or 404 if not found.
+- `store(Request)`: Creates a new deal from request data, returns JSON of created deal.
+- `update(Request, $id)`: Updates deal by ID, returns updated deal JSON or 404 if not found.
+- `destroy($id)`: Deletes deal by ID or returns 404 if not found.
+
+### Flow Summary:
+
+- Frontend routes serve Inertia pages for users, properties, transactions, and dashboard.
+- API resource routes provide RESTful endpoints for managing users, properties, and deals.
+- Each resource controller handles standard CRUD operations with JSON responses.
+- Relationships are eager loaded where relevant (e.g., properties with owner and address, deals with agent, buyer, and property).
+- Authentication and authorization middleware protect certain frontend routes (e.g., dashboard).
