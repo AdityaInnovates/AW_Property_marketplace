@@ -20,6 +20,10 @@ class Property extends Model
         'verification_docs',
         'status',
     ];
+
+    protected $attributes = [
+        'status' => "active",
+    ];
     // Relationship to Address
     public function address()
     {

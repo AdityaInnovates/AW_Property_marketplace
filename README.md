@@ -62,6 +62,29 @@ This is the backend for the AM Properties project. The backend is built using La
     php artisan serve
     ```
 
+## API Endpoints
+
+The following API endpoints are available:
+
+- `/api/users`:
+    - `GET`: Retrieves a list of all users.
+    - `GET /{id}`: Retrieves a specific user by ID.
+    - `POST`: Creates a new user.
+    - `PUT /{id}`: Updates an existing user.
+    - `DELETE /{id}`: Deletes a user.
+- `/api/properties`:
+    - `GET`: Retrieves a list of all properties.
+    - `GET /{id}`: Retrieves a specific property by ID.
+    - `POST`: Creates a new property.
+    - `PUT /{id}`: Updates an existing property.
+    - `DELETE /{id}`: Deletes a property.
+- `/api/deals`:
+    - `GET`: Retrieves a list of all deals.
+    - `GET /{id}`: Retrieves a specific deal by ID.
+    - `POST`: Creates a new deal.
+    - `PUT /{id}`: Updates an existing deal.
+    - `DELETE /{id}`: Deletes a deal.
+
 ## Contributing
 
 No Contributions Allowed Up untill Now!

@@ -25,6 +25,7 @@ class PropertyController extends Controller
 
     public function store(Request $request)
     {
+        // error_log(json_encode($request->all()));
         $property = Property::create($request->all());
         return response()->json($property, 201);
     }

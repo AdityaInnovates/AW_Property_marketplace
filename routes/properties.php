@@ -5,13 +5,8 @@ use App\Http\Controllers\Properties\UserController;
 use App\Http\Controllers\Properties\PropertyController;
 use App\Http\Controllers\Properties\DealController;
 
-Route::get('/api/users', [UserController::class, 'index']); 
-Route::get('/api/users/{id}', [UserController::class, 'show']);
+Route::resource('/api/users', UserController::class);
 
+Route::resource('/api/properties', PropertyController::class);
 
-Route::get('/api/properties', [PropertyController::class, 'index']); 
-Route::get('/api/properties/{id}', [PropertyController::class, 'show']);
-
-
-Route::get('/api/deals', [DealController::class, 'index']); 
-Route::get('/api/deals/{id}', [DealController::class, 'show']);
+Route::resource('/api/deals', DealController::class);
