@@ -83,6 +83,101 @@ The following API endpoints are available:
     - `POST`: Creates a new deal.
     - `PUT /{id}`: Updates an existing deal.
     - `DELETE /{id}`: Deletes a deal.
+- `/api/agents`:
+    - `GET`: Retrieves a list of all agents.
+    - `GET /{id}`: Retrieves a specific agent by ID.
+    - `POST`: Creates a new agent.
+    - `PUT /{id}`: Updates an existing agent.
+    - `DELETE /{id}`: Deletes an agent.
+- `/api/buyers`:
+    - `GET`: Retrieves a list of all buyers.
+    - `GET /{id}`: Retrieves a specific buyer by ID.
+    - `POST`: Creates a new buyer.
+    - `PUT /{id}`: Updates an existing buyer.
+    - `DELETE /{id}`: Deletes a buyer.
+- `/api/owners`:
+    - `GET`: Retrieves a list of all owners.
+    - `GET /{id}`: Retrieves a specific owner by ID.
+    - `POST`: Creates a new owner.
+    - `PUT /{id}`: Updates an existing owner.
+    - `DELETE /{id}`: Deletes an owner.
+
+## API Routes and Payload Details
+
+The following are the main resource routes available in the API and the details of what can be posted to each route, including required and optional fields.
+
+### Users (/api/users)
+
+**Fields that can be posted:**
+
+- `email` (string, required for update, unique)
+- `password` (string, required for update, min 8 characters)
+- `first_name` (string, required for update)
+- `last_name` (string, required for update)
+- `phone` (string, required for update)
+- `user_type` (string, required for update)
+- `preferred_contact` (string, optional)
+- `profile_picture` (string, optional)
+- `address` (string, optional)
+- `description` (string, optional)
+- `social_provider` (string, optional)
+- `social_id` (string, optional)
+
+### Properties (/api/properties)
+
+**Fields that can be posted:**
+
+- `title` (string, required)
+- `property_type` (string, required)
+- `sale_or_rent` (string, required)
+- `address_id` (integer, required)
+- `owner_id` (integer, required)
+- `created_by_agent` (integer, optional)
+- `is_verified` (boolean, optional)
+- `verification_docs` (string, optional)
+- `status` (string, optional, default "active")
+
+### Deals (/api/deals)
+
+**Fields that can be posted:**
+
+- `property_id` (integer, required)
+- `buyer_id` (integer, required)
+- `agent_id` (integer, required)
+- `deal_status` (string, optional)
+- `commission` (decimal, optional)
+- `commission_status` (string, optional)
+- `deal_date` (date, optional)
+
+### Agents (/api/agents)
+
+**Fields that can be posted:**
+
+- `user_id` (integer, required)
+- `agent_type` (string, required)
+- `license_number` (string, optional)
+- `license_expiry` (date, optional)
+- `is_verified` (boolean, optional)
+- `verification_docs` (string, optional)
+
+### Owners (/api/owners)
+
+**Fields that can be posted:**
+
+- `user_id` (integer, required)
+- `developer_name` (string, optional)
+- `is_verified` (boolean, optional)
+- `verification_docs` (string, optional)
+- `invited_by_agent_id` (integer, optional)
+
+### Buyers (/api/buyers)
+
+**Fields that can be posted:**
+
+- `user_id` (integer, required)
+- `created_by_agent_id` (integer, optional)
+
+This summary covers the main resource routes defined in the API. Each route supports the standard RESTful actions (index, show, store, update, destroy).
 
 ## Contributing
 
@@ -102,6 +197,9 @@ No Contributions Allowed Up untill Now!
 - `/api/users` → `UserController` (RESTful resource routes)
 - `/api/properties` → `PropertyController` (RESTful resource routes)
 - `/api/deals` → `DealController` (RESTful resource routes)
+- `/api/agents` → `AgentController` (RESTful resource routes)
+- `/api/buyers` → `BuyerController` (RESTful resource routes)
+- `/api/owners` → `OwnerController` (RESTful resource routes)
 
 ### Controllers and Their Methods:
 
@@ -112,6 +210,7 @@ No Contributions Allowed Up untill Now!
 - `store(Request)`: Creates a new user from request data, returns JSON of created user.
 - `update(Request, $id)`: Validates and updates user by ID, returns updated user JSON or 404 if not found.
 - `destroy($id)`: Deletes user by ID or returns 404 if not found.
+  Manages users with full CRUD operations.
 
 **b) PropertyController (app/Http/Controllers/Properties/PropertyController.php):**
 
@@ -120,6 +219,7 @@ No Contributions Allowed Up untill Now!
 - `store(Request)`: Creates a new property from request data, returns JSON of created property.
 - `update(Request, $id)`: Updates property by ID, returns updated property JSON or 404 if not found.
 - `destroy($id)`: Deletes property by ID or returns 404 if not found.
+  Manages properties with related owner and address data.
 
 **c) DealController (app/Http/Controllers/Properties/DealController.php):**
 
@@ -128,11 +228,32 @@ No Contributions Allowed Up untill Now!
 - `store(Request)`: Creates a new deal from request data, returns JSON of created deal.
 - `update(Request, $id)`: Updates deal by ID, returns updated deal JSON or 404 if not found.
 - `destroy($id)`: Deletes deal by ID or returns 404 if not found.
+  Manages deals with related agent, buyer, and property data.
+
+**d) AgentController (app/Http/Controllers/Properties/AgentController.php):**
+
+- `index()`: Returns JSON list of all agents.
+- `show($id)`: Returns JSON of a single agent by ID or 404 if not found.
+- `store(Request)`: Creates a new agent from request data, returns JSON of created agent.
+- `update(Request, $id)`: Updates agent by ID, returns updated agent JSON or 404 if not found.
+- `destroy($id)`: Deletes agent by ID or returns 404 if not found.
+  Manages agents with full CRUD operations.
+
+**e) BuyerController (app/Http/Controllers/Properties/BuyerController.php):**
+
+- `index()`: Returns JSON list of all buyers.
+- `show($id)`: Returns JSON of a single buyer by ID or 404 if not found.
+- `store(Request)`: Creates a new buyer from request data, returns JSON of created buyer.
+- `update(Request, $id)`: Updates buyer by ID, returns updated buyer JSON or 404 if not found.
+- `destroy($id)`: Deletes buyer by ID or returns 404 if not found.
+  Manages buyers with full CRUD operations.
+
+**f) OwnerController:**
+
+Route exists but controller file is missing; functionality unclear.
 
 ### Flow Summary:
 
-- Frontend routes serve Inertia pages for users, properties, transactions, and dashboard.
-- API resource routes provide RESTful endpoints for managing users, properties, and deals.
-- Each resource controller handles standard CRUD operations with JSON responses.
-- Relationships are eager loaded where relevant (e.g., properties with owner and address, deals with agent, buyer, and property).
-- Authentication and authorization middleware protect certain frontend routes (e.g., dashboard).
+- Frontend routes serve Inertia.js pages for users, properties, transactions, and dashboard.
+- API resource routes provide standard CRUD operations for users, properties, deals, agents, buyers, and owners.
+- Controllers handle requests and return JSON responses, with eager loading of related models where applicable.

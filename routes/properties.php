@@ -7,6 +7,8 @@ use App\Http\Controllers\Properties\DealController;
 use App\Http\Controllers\Properties\AgentController;
 use App\Http\Controllers\Properties\OwnerController;
 use App\Http\Controllers\Properties\BuyerController;
+use App\Http\Controllers\Properties\AddressController;
+use App\Http\Controllers\Properties\PropertyMediaController;
 
 Route::resource('/api/users', UserController::class);
 
@@ -19,3 +21,4 @@ Route::resource('/api/agents', AgentController::class);
 Route::resource('/api/owners', OwnerController::class);
 
 Route::resource('/api/buyers', BuyerController::class);
+
