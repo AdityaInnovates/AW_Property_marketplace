@@ -177,7 +177,7 @@ The following are the main resource routes available in the API and the details 
 - `user_id` (integer, required)
 - `created_by_agent_id` (integer, optional)
 
-This summary covers the main resource routes defined in the API. Each route supports the standard RESTful actions (index, show, store, update, destroy).
+Each route supports the standard RESTful actions (index, show, store, update, destroy).
 
 ## Contributing
 
