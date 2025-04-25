@@ -144,9 +144,9 @@ The following are the main resource routes available in the API and the details 
 - `property_id` (integer, required)
 - `buyer_id` (integer, required)
 - `agent_id` (integer, required)
-- `deal_status` (string, optional)
-- `commission` (decimal, optional)
-- `commission_status` (string, optional)
+- `deal_status` (string, required)
+- `commission` (decimal, required)
+- `commission_status` (string, required)
 - `deal_date` (date, optional)
 
 ### Agents (/api/agents)

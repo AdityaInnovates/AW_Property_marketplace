@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('deal_status');
             $table->decimal('commission', 10, 2);
             $table->string('commission_status');
-            $table->timestamp('deal_date');
+            $table->timestamp('deal_date')->useCurrent();
             $table->timestamps();
         });
     }

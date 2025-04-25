@@ -22,3 +22,7 @@ Route::resource('/api/owners', OwnerController::class);
 
 Route::resource('/api/buyers', BuyerController::class);
 
+Route::resource('/api/addresses', AddressController::class);
+
+Route::resource('/api/property-media', PropertyMediaController::class);
+
