@@ -24,7 +24,11 @@ This is the backend for the AM Properties project. The backend is built using La
     composer install
     ```
 
-3. Set up your PostgreSQL database:
+3. Set up your laravel app key:
+    ```bash
+    php artisan key:generate
+    ```
+4. Set up your PostgreSQL database:
 
     - Create a new PostgreSQL database:
 
@@ -39,7 +43,7 @@ This is the backend for the AM Properties project. The backend is built using La
         GRANT ALL PRIVILEGES ON DATABASE am_properties TO your_username;
         ```
 
-4. Update your `.env` file with the database credentials:
+5. Update your `.env` file with the database credentials:
 
     ```env
     DB_CONNECTION=pgsql
@@ -52,13 +56,13 @@ This is the backend for the AM Properties project. The backend is built using La
     VITE_API_BASE_URL=http://localhost:8000/api
     ```
 
-5. Run migrations to create the database tables:
+6. Run migrations to create the database tables:
 
     ```bash
     php artisan migrate
     ```
 
-6. Start the server:
+7. Start the server:
     ```bash
     composer dev
     ```
