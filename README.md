@@ -48,6 +48,8 @@ This is the backend for the AM Properties project. The backend is built using La
     DB_DATABASE=am_properties
     DB_USERNAME=your_username
     DB_PASSWORD=your_password
+    APP_URL=http://localhost:8000
+    VITE_API_BASE_URL=http://localhost:8000/api
     ```
 
 5. Run migrations to create the database tables:
@@ -58,7 +60,7 @@ This is the backend for the AM Properties project. The backend is built using La
 
 6. Start the server:
     ```bash
-    php artisan serve
+    composer dev
     ```
 
 ## API Endpoints
