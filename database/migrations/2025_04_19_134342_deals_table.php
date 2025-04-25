@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('deals', function (Blueprint $table) {
             $table->id();
             $table->foreignId('property_id')->constrained()->onDelete('cascade');
-            $table->foreignId('buyer_id')->constrained('buyers', 'user_id')->onDelete('cascade');
-            $table->foreignId('agent_id')->constrained('agents', 'user_id')->onDelete('cascade');
+            $table->foreignId('buyer_id')->constrained('buyers')->onDelete('cascade');
+            $table->foreignId('agent_id')->constrained('agents')->onDelete('cascade');
             $table->string('deal_status');
             $table->decimal('commission', 10, 2);
             $table->string('commission_status');

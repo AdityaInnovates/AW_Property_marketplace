@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('buyer_recommended_properties', function (Blueprint $table) {
             $table->id(); 
-            $table->foreignId('buyer_id')->constrained('buyers','user_id')->onDelete('cascade');
+            $table->foreignId('buyer_id')->constrained('buyers')->onDelete('cascade');
             $table->foreignId('property_id')->constrained()->onDelete('cascade'); 
             $table->integer('score');
             $table->timestamp('recommended_at');

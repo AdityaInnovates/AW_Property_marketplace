@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('signed_agreements', function (Blueprint $table) {
             $table->id('agreement_id'); 
-            $table->foreignId('buyer_id')->constrained("buyers","user_id")->onDelete('cascade'); 
-            $table->foreignId('agent_id')->constrained('agents', 'user_id')->onDelete('cascade'); 
+            $table->foreignId('buyer_id')->constrained("buyers")->onDelete('cascade'); 
+            $table->foreignId('agent_id')->constrained('agents')->onDelete('cascade'); 
             $table->foreignId('property_id')->constrained()->onDelete('cascade'); 
             $table->text('verification_docs')->nullable();
             $table->string('status');

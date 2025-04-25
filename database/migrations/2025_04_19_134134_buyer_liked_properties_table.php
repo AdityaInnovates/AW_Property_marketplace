@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('buyer_liked_properties', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('buyer_id')->constrained("buyers","user_id")->onDelete('cascade');
+            $table->foreignId('buyer_id')->constrained("buyers")->onDelete('cascade');
             $table->foreignId('property_id')->constrained()->onDelete('cascade');
             $table->timestamp('liked_at')->useCurrent();
             $table->timestamps();

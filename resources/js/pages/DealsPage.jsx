@@ -154,7 +154,7 @@ export default function DealsPage() {
                                         <TableRow key={deal.id}>
                                             <TableCell className="p-[1rem] font-medium">{deal.property.title}</TableCell>
                                             <TableCell className="p-[1rem]">
-                                                {deal.buyer.user.first_name + (' ' + deal?.buyer?.user?.last_name || '')}
+                                                {deal?.buyer?.user?.first_name + (' ' + (deal?.buyer?.user?.last_name || ''))}
                                             </TableCell>
                                             <TableCell className="p-[1rem]">{deal?.agent?.user?.first_name || 'N/A'}</TableCell>
                                             <TableCell className="p-[1rem]">

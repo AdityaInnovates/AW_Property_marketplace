@@ -18,10 +18,10 @@ return new class extends Migration
             $table->string('status'); 
             $table->timestamp('escrow_date'); 
             $table->timestamp('transaction_date');
-            $table->foreignId('agent_id')->constrained("agents","user_id")->onDelete('cascade'); 
-            $table->foreignId('buyer_id')->constrained("buyers","user_id")->onDelete('cascade');
+            $table->foreignId('agent_id')->constrained("agents")->onDelete('cascade'); 
+            $table->foreignId('buyer_id')->constrained("buyers")->onDelete('cascade');
             $table->string('payment_account');
-            $table->foreignId('released_by')->constrained('agents',"user_id")->onDelete('cascade');
+            $table->foreignId('released_by')->constrained('agents')->onDelete('cascade');
             $table->timestamp('release_date')->nullable();
             $table->text('release_notes')->nullable();
             $table->timestamps();
