@@ -107,6 +107,20 @@ The following API endpoints are available:
     - `POST`: Creates a new owner.
     - `PUT /{id}`: Updates an existing owner.
     - `DELETE /{id}`: Deletes an owner.
+- `/api/agent-create`:
+    - `POST`: Creates a new user and linked agent together.
+- `/api/addresses`:
+    - `GET`: Retrieves a list of all addresses.
+    - `GET /{id}`: Retrieves a specific address by ID.
+    - `POST`: Creates a new address.
+    - `PUT /{id}`: Updates an existing address.
+    - `DELETE /{id}`: Deletes an address.
+- `/api/property-media`:
+    - `GET`: Retrieves a list of all property media.
+    - `GET /{id}`: Retrieves a specific property media by ID.
+    - `POST`: Creates new property media.
+    - `PUT /{id}`: Updates existing property media.
+    - `DELETE /{id}`: Deletes property media.
 
 ## API Routes and Payload Details
 
@@ -166,24 +180,83 @@ The following are the main resource routes available in the API and the details 
 - `is_verified` (boolean, optional)
 - `verification_docs` (string, optional)
 
-### Owners (/api/owners)
+### Agent Creation (/api/agent-create)
 
 **Fields that can be posted:**
 
-- `user_id` (integer, required)
-- `developer_name` (string, optional)
-- `is_verified` (boolean, optional)
-- `verification_docs` (string, optional)
-- `invited_by_agent_id` (integer, optional)
+- User fields:
+  - `email` (string, required, unique)
+  - `password` (string, required, min 6 characters)
+  - `first_name` (string, required)
+  - `last_name` (string, required)
+  - `phone` (string, optional)
+  - `user_type` (string, required)
+- Agent fields:
+  - `agent_type` (string, required)
+  - `license_number` (string, required)
+  - `license_expiry` (date, required)
+  - `is_verified` (boolean, optional)
+  - `verification_docs` (string, optional)
 
-### Buyers (/api/buyers)
+**Example payload:**
+
+```json
+{
+  "email": "agent@example.com",
+  "password": "securepassword",
+  "first_name": "John",
+  "last_name": "Doe",
+  "phone": "123-456-7890",
+  "user_type": "agent",
+  "agent_type": "real_estate",
+  "license_number": "ABC123456",
+  "license_expiry": "2025-12-31",
+  "is_verified": true,
+  "verification_docs": "url_to_docs"
+}
+```
+
+### Addresses (/api/addresses)
 
 **Fields that can be posted:**
 
-- `user_id` (integer, required)
-- `created_by_agent_id` (integer, optional)
+- `street` (string, required)
+- `city` (string, required)
+- `state` (string, required)
+- `postal_code` (string, required)
+- `country` (string, required)
 
-Each route supports the standard RESTful actions (index, show, store, update, destroy).
+**Example payload:**
+
+```json
+{
+  "street": "123 Main St",
+  "city": "Anytown",
+  "state": "CA",
+  "postal_code": "12345",
+  "country": "USA"
+}
+```
+
+### Property Media (/api/property-media)
+
+**Fields that can be posted:**
+
+- `property_id` (integer, required)
+- `media_type` (string, required)
+- `url` (string, required)
+- `description` (string, optional)
+
+**Example payload:**
+
+```json
+{
+  "property_id": 1,
+  "media_type": "image",
+  "url": "http://example.com/image.jpg",
+  "description": "Front view of the property"
+}
+```
 
 ## Contributing
 

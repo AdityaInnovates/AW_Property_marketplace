@@ -18,6 +18,8 @@ Route::resource('/api/deals', DealController::class);
 
 Route::resource('/api/agents', AgentController::class);
 
+Route::post('/api/agent-create', [\App\Http\Controllers\Properties\AgentCreationController::class, 'store']);
+
 Route::resource('/api/owners', OwnerController::class);
 
 Route::resource('/api/buyers', BuyerController::class);
