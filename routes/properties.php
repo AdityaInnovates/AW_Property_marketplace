@@ -20,6 +20,10 @@ Route::resource('/api/agents', AgentController::class);
 
 Route::post('/api/agent-create', [\App\Http\Controllers\Properties\AgentCreationController::class, 'store']);
 
+Route::post('/api/buyer-create', [\App\Http\Controllers\Properties\BuyerCreationController::class, 'store']);
+
+Route::post('/api/owner-create', [\App\Http\Controllers\Properties\OwnerCreationController::class, 'store']);
+
 Route::resource('/api/owners', OwnerController::class);
 
 Route::resource('/api/buyers', BuyerController::class);

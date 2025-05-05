@@ -1,3 +1,4 @@
+import { AddUserDialog } from '@/components/add-user-dialog';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
@@ -12,10 +13,9 @@ import {
 import { Input } from '@/components/ui/input';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Filter, Plus, Search } from 'lucide-react';
+import { Filter, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import axiosInstance from '../lib/axiosInstance';
-
 // Mock data for users
 // const users = [
 //     {
@@ -84,22 +84,22 @@ export default function UsersPage() {
     const [Users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [filterType, setFilterType] = useState('');
-
+    async function fetchUsers() {
+        var { data: axres } = await axiosInstance.get('/users');
+        setUsers(axres);
+    }
     useEffect(() => {
-        (async () => {
-            var { data: axres } = await axiosInstance.get('/users');
-            setUsers(axres);
-        })();
+        fetchUsers();
     }, []);
+    function handleUserAdded() {
+        fetchUsers();
+    }
     return (
         <div className="w-[80%] p-[4rem]">
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Users</h1>
-                    <Button>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add User
-                    </Button>
+                    <AddUserDialog onUserAdded={handleUserAdded} />
                 </div>
 
                 <Card>
