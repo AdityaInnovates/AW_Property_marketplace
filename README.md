@@ -6,8 +6,8 @@ This is the backend for the AM Properties project. The backend is built using La
 
 ## Features
 
-- **Backend:** The backend is also designed to manage Users, Agents, Properties Created on PHP and postgresSQL.
-- **Frontend:** Frontend is Created on React.js with tailwindCSS and UI library with inertia.js for routing
+- **Backend:** The backend manages Users, Agents, Properties, Deals, Buyers, Owners, Addresses, and Property Media using PHP and PostgreSQL. It features RESTful API endpoints with full CRUD operations, Laravel's built-in authentication and authorization, and PostgreSQL as the primary database with migrations and seeders.
+- **Frontend:** Frontend is built with React.js, TailwindCSS, and Inertia.js for routing.
 
 ## Getting Started
 
@@ -121,6 +121,10 @@ The following API endpoints are available:
     - `POST`: Creates new property media.
     - `PUT /{id}`: Updates existing property media.
     - `DELETE /{id}`: Deletes property media.
+- `/api/owner-create`:
+    - `POST`: Creates a new owner.
+- `/api/buyer-create`:
+    - `POST`: Creates a new buyer.
 
 ## API Routes and Payload Details
 
@@ -185,34 +189,34 @@ The following are the main resource routes available in the API and the details 
 **Fields that can be posted:**
 
 - User fields:
-  - `email` (string, required, unique)
-  - `password` (string, required, min 6 characters)
-  - `first_name` (string, required)
-  - `last_name` (string, required)
-  - `phone` (string, optional)
-  - `user_type` (string, required)
+    - `email` (string, required, unique)
+    - `password` (string, required, min 6 characters)
+    - `first_name` (string, required)
+    - `last_name` (string, required)
+    - `phone` (string, optional)
+    - `user_type` (string, required)
 - Agent fields:
-  - `agent_type` (string, required)
-  - `license_number` (string, required)
-  - `license_expiry` (date, required)
-  - `is_verified` (boolean, optional)
-  - `verification_docs` (string, optional)
+    - `agent_type` (string, required)
+    - `license_number` (string, required)
+    - `license_expiry` (date, required)
+    - `is_verified` (boolean, optional)
+    - `verification_docs` (string, optional)
 
 **Example payload:**
 
 ```json
 {
-  "email": "agent@example.com",
-  "password": "securepassword",
-  "first_name": "John",
-  "last_name": "Doe",
-  "phone": "123-456-7890",
-  "user_type": "agent",
-  "agent_type": "real_estate",
-  "license_number": "ABC123456",
-  "license_expiry": "2025-12-31",
-  "is_verified": true,
-  "verification_docs": "url_to_docs"
+    "email": "agent@example.com",
+    "password": "securepassword",
+    "first_name": "John",
+    "last_name": "Doe",
+    "phone": "123-456-7890",
+    "user_type": "agent",
+    "agent_type": "real_estate",
+    "license_number": "ABC123456",
+    "license_expiry": "2025-12-31",
+    "is_verified": true,
+    "verification_docs": "url_to_docs"
 }
 ```
 
@@ -230,11 +234,11 @@ The following are the main resource routes available in the API and the details 
 
 ```json
 {
-  "street": "123 Main St",
-  "city": "Anytown",
-  "state": "CA",
-  "postal_code": "12345",
-  "country": "USA"
+    "street": "123 Main St",
+    "city": "Anytown",
+    "state": "CA",
+    "postal_code": "12345",
+    "country": "USA"
 }
 ```
 
@@ -251,10 +255,69 @@ The following are the main resource routes available in the API and the details 
 
 ```json
 {
-  "property_id": 1,
-  "media_type": "image",
-  "url": "http://example.com/image.jpg",
-  "description": "Front view of the property"
+    "property_id": 1,
+    "media_type": "image",
+    "url": "http://example.com/image.jpg",
+    "description": "Front view of the property"
+}
+```
+
+### Owner Creation (/api/owner-create)
+
+**Fields that can be posted:**
+
+- User fields:
+    - `email` (string, required, unique)
+    - `password` (string, required, min 6 characters)
+    - `first_name` (string, required)
+    - `last_name` (string, required)
+    - `phone` (string, optional)
+    - `user_type` (string, required)
+- Owner fields:
+    - `developer_name` (string, required)
+    - `is_verified` (boolean, optional)
+    - `verification_docs` (string, optional)
+
+**Example payload:**
+
+```json
+{
+    "email": "owner@example.com",
+    "password": "securepassword",
+    "first_name": "Jane",
+    "last_name": "Smith",
+    "phone": "987-654-3210",
+    "user_type": "owner",
+    "developer_name": "Acme Corp",
+    "is_verified": false,
+    "verification_docs": "url_to_docs"
+}
+```
+
+### Buyer Creation (/api/buyer-create)
+
+**Fields that can be posted:**
+
+- User fields:
+    - `email` (string, required, unique)
+    - `password` (string, required, min 6 characters)
+    - `first_name` (string, required)
+    - `last_name` (string, required)
+    - `phone` (string, optional)
+    - `user_type` (string, required)
+- Buyer fields:
+    - No specific buyer fields besides the user fields.
+
+**Example payload:**
+
+```json
+{
+    "email": "buyer@example.com",
+    "password": "securepassword",
+    "first_name": "Alice",
+    "last_name": "Johnson",
+    "phone": "555-123-4567",
+    "user_type": "buyer"
 }
 ```
 
@@ -329,10 +392,21 @@ No Contributions Allowed Up untill Now!
 
 **f) OwnerController:**
 
-Route exists but controller file is missing; functionality unclear.
+- `index()`: Returns JSON list of all owners.
+- `show($id)`: Returns JSON of a single owner by ID or 404 if not found.
+- `store(Request)`: Creates a new owner from request data, returns JSON of created owner.
+- `update(Request, $id)`: Updates owner by ID, returns updated owner JSON or 404 if not found.
+- `destroy($id)`: Deletes owner by ID or returns 404 if not found.
+  Manages owners with full CRUD operations.
 
 ### Flow Summary:
 
 - Frontend routes serve Inertia.js pages for users, properties, transactions, and dashboard.
 - API resource routes provide standard CRUD operations for users, properties, deals, agents, buyers, and owners.
 - Controllers handle requests and return JSON responses, with eager loading of related models where applicable.
+- MVC architecture with React.js frontend using Inertia.js.
+- Frontend sends HTTP requests to backend API endpoints.
+- Backend controllers handle requests, validate data, interact with database models, and return JSON responses.
+- Eager loading of related models for performance optimization.
+- Authentication and authorization mechanisms secure resource access.
+- All main controllers (UserController, PropertyController, DealController, AgentController, BuyerController, OwnerController) implement full CRUD operations.
