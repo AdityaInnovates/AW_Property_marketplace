@@ -15,6 +15,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Filter, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 // Mock data for users
 // const users = [
@@ -80,7 +81,7 @@ import axiosInstance from '../lib/axiosInstance';
 //     },
 // ];
 
-export default function UsersPage() {
+export default withAppShell(function UsersPage() {
     const [Users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [filterType, setFilterType] = useState('');
@@ -95,7 +96,7 @@ export default function UsersPage() {
         fetchUsers();
     }
     return (
-        <div className="w-[80%] p-[4rem]">
+        <div className="w-[100%] p-[4rem]">
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Users</h1>
@@ -136,21 +137,21 @@ export default function UsersPage() {
                                 </DropdownMenu>
                             </div>
                             {/* <div className="flex items-center gap-2">
-                                <Select defaultValue="10">
-                                    <SelectTrigger className="w-[80px]">
-                                        <SelectValue placeholder="10" />
-                                    </SelectTrigger>
-                                    <SelectContent>
-                                        <SelectItem value="10">10</SelectItem>
-                                        <SelectItem value="20">20</SelectItem>
-                                        <SelectItem value="50">50</SelectItem>
-                                        <SelectItem value="100">100</SelectItem>
-                                    </SelectContent>
-                                </Select>
-                                <Button variant="outline" size="icon">
-                                    <Download className="h-4 w-4" />
-                                </Button>
-                            </div> */}
+                                    <Select defaultValue="10">
+                                        <SelectTrigger className="w-[80px]">
+                                            <SelectValue placeholder="10" />
+                                        </SelectTrigger>
+                                        <SelectContent>
+                                            <SelectItem value="10">10</SelectItem>
+                                            <SelectItem value="20">20</SelectItem>
+                                            <SelectItem value="50">50</SelectItem>
+                                            <SelectItem value="100">100</SelectItem>
+                                        </SelectContent>
+                                    </Select>
+                                    <Button variant="outline" size="icon">
+                                        <Download className="h-4 w-4" />
+                                    </Button>
+                                </div> */}
                         </div>
 
                         <div className="rounded-md border">
@@ -207,22 +208,22 @@ export default function UsersPage() {
                                             </TableCell>
                                             <TableCell className="p-[1rem]">{user.preferred_contact || 'N/A'}</TableCell>
                                             {/* <TableCell className="text-right">
-                                                <DropdownMenu>
-                                                    <DropdownMenuTrigger asChild>
-                                                        <Button variant="ghost" size="icon">
-                                                            <MoreHorizontal className="h-4 w-4" />
-                                                            <span className="sr-only">Open menu</span>
-                                                        </Button>
-                                                    </DropdownMenuTrigger>
-                                                    <DropdownMenuContent align="end">
-                                                        <DropdownMenuLabel>Actions</DropdownMenuLabel>
-                                                        <DropdownMenuSeparator />
-                                                        <DropdownMenuItem>View details</DropdownMenuItem>
-                                                        <DropdownMenuItem>Edit user</DropdownMenuItem>
-                                                        <DropdownMenuItem className="text-destructive">Delete user</DropdownMenuItem>
-                                                    </DropdownMenuContent>
-                                                </DropdownMenu>
-                                            </TableCell> */}
+                                                    <DropdownMenu>
+                                                        <DropdownMenuTrigger asChild>
+                                                            <Button variant="ghost" size="icon">
+                                                                <MoreHorizontal className="h-4 w-4" />
+                                                                <span className="sr-only">Open menu</span>
+                                                            </Button>
+                                                        </DropdownMenuTrigger>
+                                                        <DropdownMenuContent align="end">
+                                                            <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                                            <DropdownMenuSeparator />
+                                                            <DropdownMenuItem>View details</DropdownMenuItem>
+                                                            <DropdownMenuItem>Edit user</DropdownMenuItem>
+                                                            <DropdownMenuItem className="text-destructive">Delete user</DropdownMenuItem>
+                                                        </DropdownMenuContent>
+                                                    </DropdownMenu>
+                                                </TableCell> */}
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -257,4 +258,4 @@ export default function UsersPage() {
             </div>
         </div>
     );
-}
+});

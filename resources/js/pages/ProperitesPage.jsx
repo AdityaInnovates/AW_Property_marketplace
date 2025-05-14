@@ -14,6 +14,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { CheckCircle, Filter, Search, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 
 // Mock data for properties
@@ -75,7 +76,7 @@ const properties = [
     },
 ];
 
-export default function PropertiesPage() {
+export default withAppShell(function PropertiesPage() {
     const [Properties, setProperties] = useState([]);
     useEffect(() => {
         (async () => {
@@ -85,7 +86,7 @@ export default function PropertiesPage() {
     }, []);
 
     return (
-        <div className="w-[80%] p-[4rem]">
+        <div className="w-[100%] p-[4rem]">
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Properties</h1>
@@ -240,4 +241,4 @@ export default function PropertiesPage() {
             </div>
         </div>
     );
-}
+});

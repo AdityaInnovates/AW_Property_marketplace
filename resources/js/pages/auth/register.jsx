@@ -1,4 +1,4 @@
-import { Head } from '@inertiajs/react';
+import { Head, useForm } from '@inertiajs/react';
 import { LoaderCircle } from 'lucide-react';
 
 import InputError from '@/components/input-error';
@@ -9,20 +9,20 @@ import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
 export default function Register() {
-    // const { data, setData, post, processing, errors, reset } = useForm({
-    //     name: '',
-    //     email: '',
-    //     password: '',
-    //     phone: '',
-    //     password_confirmation: '',
-    // });
+    const { data, setData, post, processing, errors, reset } = useForm({
+        name: '',
+        email: '',
+        password: '',
+        phone: '',
+        password_confirmation: '',
+    });
 
-    // const submit = (e) => {
-    //     e.preventDefault();
-    //     post(route('register'), {
-    //         onFinish: () => reset('password', 'password_confirmation'),
-    //     });
-    // };
+    const submit = (e) => {
+        e.preventDefault();
+        post(route('register'), {
+            onFinish: () => reset('password', 'password_confirmation'),
+        });
+    };
 
     return (
         <div className="flex h-screen w-screen items-center justify-center">

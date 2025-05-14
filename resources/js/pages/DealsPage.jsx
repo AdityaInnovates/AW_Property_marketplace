@@ -14,6 +14,7 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DollarSign, Filter, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 
 // Mock data for deals
@@ -70,7 +71,7 @@ const deals = [
     },
 ];
 
-export default function DealsPage() {
+export default withAppShell(function DealsPage() {
     const [Deals, setDeals] = useState([]);
     useEffect(() => {
         (async () => {
@@ -80,7 +81,7 @@ export default function DealsPage() {
     }, []);
 
     return (
-        <div className="w-[80%] p-[4rem]">
+        <div className="w-[100%] p-[4rem]">
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Transactions</h1>
@@ -244,4 +245,4 @@ export default function DealsPage() {
             </div>
         </div>
     );
-}
+});

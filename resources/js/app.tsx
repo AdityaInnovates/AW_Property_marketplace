@@ -3,8 +3,6 @@ import '../css/app.css';
 import { createInertiaApp } from '@inertiajs/react';
 import { resolvePageComponent } from 'laravel-vite-plugin/inertia-helpers';
 import { createRoot } from 'react-dom/client';
-import { ToastContainer } from 'react-toastify';
-import { AppShell } from './components/app-shell';
 import { initializeTheme } from './hooks/use-appearance';
 
 const appName = import.meta.env.VITE_APP_NAME || 'Laravel';
@@ -15,12 +13,7 @@ createInertiaApp({
     setup({ el, App, props }: any) {
         const root = createRoot(el);
         // console.log('props object:', props);
-        root.render(
-            <AppShell sidebarOpen={props.sidebarOpen} auth={props.auth} ziggy={props.ziggy}>
-                <ToastContainer theme="dark" />
-                <App {...props} />
-            </AppShell>,
-        );
+        root.render(<App {...props} />);
     },
     progress: {
         color: '#4B5563',
