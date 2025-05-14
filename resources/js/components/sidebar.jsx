@@ -53,7 +53,7 @@ export default function Sidebar() {
     ];
 
     return (
-        <div className="bg-background hidden h-[100vh] border-r md:block md:w-64">
+        <div className="bg-background /md:w-64 hidden h-[100vh] border-r md:block md:w-[15%]">
             <div className="flex h-full flex-col">
                 <div className="border-b px-6 py-4">
                     <h2 className="text-lg font-semibold">Property Admin</h2>

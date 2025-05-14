@@ -15,12 +15,12 @@ export function AppShell({ children, variant = 'header', sidebarOpen, auth, zigg
     // useEffect(() => {
     //     console.log(ziggy);
     // }, [ziggy]);
-    console.log({ auth });
+    // console.log({ auth });
     return (
         <div className="flex h-screen w-full">
             <Sidebar sidebarOpen={sidebarOpen} auth={auth} />
             {/* <Header auth={auth} /> */}
-            <div className="h-full w-full overflow-y-auto">{children}</div>
+            <div className="h-full w-[85%] overflow-y-auto">{children}</div>
         </div>
     );
 }
