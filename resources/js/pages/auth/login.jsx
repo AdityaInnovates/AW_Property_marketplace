@@ -21,15 +21,11 @@ import AuthLayout from '@/layouts/auth-layout';
 // }
 
 export default function Login({ status, canResetPassword }) {
-    const { data, setData, post, processing, errors, reset } =
-        useForm <
-        Required <
-        LoginForm >>
-            {
-                email: '',
-                password: '',
-                remember: false,
-            };
+    const { data, setData, post, processing, errors, reset } = useForm({
+        email: '',
+        password: '',
+        remember: false,
+    });
 
     const submit = (e) => {
         e.preventDefault();
