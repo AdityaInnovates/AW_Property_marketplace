@@ -41,18 +41,18 @@ class HandleInertiaRequests extends Middleware
 
         $ziggy = new Ziggy();
 
-        return [
-            ...parent::share($request),
+        return array_merge(parent::share($request), [
             'name' => config('app.name'),
             'quote' => ['message' => trim($message), 'author' => trim($author)],
             'auth' => [
-    'user' => $request->user(),
-    'is_authenticated' => $request->user() !== null,
-],
+                'user' => $request->user() ? $request->user()->only('id', 'first_name', 'last_name', 'email') : null,
+            ],
             'ziggy' => function () use ($request) {
-            return new Ziggy;
+                return array_merge((new Ziggy)->toArray(), [
+                    'location' => $request->url(),
+                ]);
             },
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
-        ];
+        ]);
     }
 }
