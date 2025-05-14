@@ -15,7 +15,7 @@ import AuthLayout from '@/layouts/auth-layout';
 //     remember: boolean;
 // };
 
-// interface LoginProps  {
+// interface LoginProps   {
 //     status?: string;
 //     canResetPassword: boolean;
 // }
