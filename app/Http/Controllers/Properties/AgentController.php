@@ -7,6 +7,8 @@ use App\Models\Agent;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use Illuminate\Support\Facades\Validator;
+
 class AgentController extends Controller
 {
     public function index()
@@ -34,6 +36,27 @@ class AgentController extends Controller
         try {
             $agent = Agent::findOrFail($id);
             $agent->update($request->all());
+            return response()->json($agent, 200);
+        } catch (ModelNotFoundException $e) {
+            return response()->json(['error' => 'Agent not found'], 404);
+        }
+    }
+
+    public function updateVerificationStatus(Request $request, $id)
+    {
+        try {
+            $validator = Validator::make($request->all(), [
+                'is_verified' => 'required|boolean',
+            ]);
+
+            if ($validator->fails()) {
+                return response()->json(['error' => 'Invalid input for is_verified'], 422);
+            }
+
+            $agent = Agent::findOrFail($id);
+            $agent->is_verified = $request->input('is_verified');
+            $agent->save();
+
             return response()->json($agent, 200);
         } catch (ModelNotFoundException $e) {
             return response()->json(['error' => 'Agent not found'], 404);

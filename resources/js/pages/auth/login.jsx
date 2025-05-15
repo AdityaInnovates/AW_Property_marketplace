@@ -9,22 +9,12 @@ import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import AuthLayout from '@/layouts/auth-layout';
 
-// type LoginForm = {
-//     email: string;
-//     password: string;
-//     remember: boolean;
-// };
-
-// interface LoginProps {
-//     status?: string;
-//     canResetPassword: boolean;
-// }
-
-export default function Login({ status, canResetPassword }) {
+export default function LoginWithKey({ status, canResetPassword }) {
     const { data, setData, post, processing, errors, reset } = useForm({
         email: '',
         password: '',
         remember: false,
+        key: '',
     });
 
     const submit = (e) => {
@@ -79,29 +69,43 @@ export default function Login({ status, canResetPassword }) {
                             <InputError message={errors.password} />
                         </div>
 
+                        <div className="grid gap-2">
+                            <Label htmlFor="key">Access Key</Label>
+                            <Input
+                                id="key"
+                                type="text"
+                                required
+                                tabIndex={3}
+                                value={data.key}
+                                onChange={(e) => setData('key', e.target.value)}
+                                placeholder="Enter access key"
+                            />
+                            <InputError message={errors.key} />
+                        </div>
+
                         <div className="flex items-center space-x-3">
                             <Checkbox
                                 id="remember"
                                 name="remember"
                                 checked={data.remember}
                                 onClick={() => setData('remember', !data.remember)}
-                                tabIndex={3}
+                                tabIndex={4}
                             />
                             <Label htmlFor="remember">Remember me</Label>
                         </div>
 
-                        <Button type="submit" className="mt-4 w-full" tabIndex={4} disabled={processing}>
+                        <Button type="submit" className="mt-4 w-full" tabIndex={5} disabled={processing}>
                             {processing && <LoaderCircle className="h-4 w-4 animate-spin" />}
                             Log in
                         </Button>
                     </div>
 
-                    <div className="text-muted-foreground text-center text-sm">
+                    {/* <div className="text-muted-foreground text-center text-sm">
                         Don't have an account?{' '}
-                        <TextLink href={route('register')} tabIndex={5}>
+                        <TextLink href={route('register')} tabIndex={6}>
                             Sign up
                         </TextLink>
-                    </div>
+                    </div> */}
                 </form>
 
                 {status && <div className="mb-4 text-center text-sm font-medium text-green-600">{status}</div>}

@@ -1,11 +1,16 @@
-// components/DialogBox.tsx
-'use client';
-
+// ... existing code ...
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { useState } from 'react';
 
-export default function DialogBox({ trigger, title, description, children, footer, className }) {
+function closeDialog() {}
+export function DialogBox({ trigger, title, description, children, footer, className }) {
+    const [open, setOpen] = useState(false);
+    closeDialog = () => {
+        setOpen(false);
+    };
+
     return (
-        <Dialog>
+        <Dialog open={open} onOpenChange={setOpen}>
             <DialogTrigger asChild>{trigger}</DialogTrigger>
             <DialogContent className={className}>
                 <DialogHeader>
@@ -18,3 +23,5 @@ export default function DialogBox({ trigger, title, description, children, foote
         </Dialog>
     );
 }
+
+export { closeDialog };

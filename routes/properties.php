@@ -18,6 +18,8 @@ Route::resource('/api/deals', DealController::class);
 
 Route::resource('/api/agents', AgentController::class);
 
+Route::patch('/api/agents/{id}/verify', [AgentController::class, 'updateVerificationStatus']);
+
 Route::post('/api/agent-create', [\App\Http\Controllers\Properties\AgentCreationController::class, 'store']);
 
 Route::post('/api/buyer-create', [\App\Http\Controllers\Properties\BuyerCreationController::class, 'store']);

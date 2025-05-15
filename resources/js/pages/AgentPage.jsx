@@ -1,6 +1,6 @@
 import { AddUserDialog } from '@/components/add-user-dialog';
 import AgentTableRow from '@/components/AgentTableRow';
-import DialogBox from '@/components/dialog-box';
+import { DialogBox } from '@/components/dialog-box';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { DialogClose } from '@/components/ui/dialog';
@@ -10,56 +10,61 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
+import { toast } from 'react-toastify';
+import { closeDialog } from '../components/dialog-box';
 import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 
 function popoverChild(agent) {
     return (
-        <div className="grid grid-cols-3 flex-col gap-[1rem] gap-y-[1.5rem]">
-            {/* <div className="flex w-full justify-between"> */}
-            <div className="flex flex-col gap-[0.5rem]">
-                <Label htmlFor="email">First name</Label>
-                <h3>{agent.user.first_name}</h3>
+        <>
+            <div className="grid grid-cols-3 flex-col gap-[1rem] gap-y-[1.5rem]">
+                {/* <div className="flex w-full justify-between"> */}
+                <div className="flex flex-col gap-[0.5rem]">
+                    <Label htmlFor="email">First name</Label>
+                    <h3>{agent.user.first_name}</h3>
+                </div>
+                <div className="flex flex-col gap-[0.5rem]">
+                    <Label htmlFor="email">Last name</Label>
+                    <h3>{agent.user.last_name}</h3>
+                </div>
+                <div className="flex flex-col gap-[0.5rem]">
+                    <Label htmlFor="email">Email</Label>
+                    <h3>{agent.user.email}</h3>
+                </div>
+                {/* </div> */}
+                {/* <DropdownMenuSeparator /> */}
+                {/* <div className="flex w-full justify-between"> */}
+                <div className="flex flex-col gap-[0.5rem]">
+                    <Label htmlFor="email">Phone</Label>
+                    <h3>{agent.user.phone}</h3>
+                </div>
+                <div className="flex flex-col gap-[0.5rem]">
+                    <Label htmlFor="email">Prefered Contact</Label>
+                    <h3>{agent.user.preferred_contact}</h3>
+                </div>
+                <div className="flex flex-col gap-[0.5rem]">
+                    <Label htmlFor="email">Created at</Label>
+                    <h3>{new Date(agent.user.created_at).toLocaleDateString()}</h3>
+                </div>
+                <div className="flex flex-col gap-[0.5rem]">
+                    <Label htmlFor="email">License Number</Label>
+                    <h3>{agent.license_number}</h3>
+                </div>
+                <div className="flex flex-col gap-[0.5rem]">
+                    <Label htmlFor="email">License Expiry</Label>
+                    <h3>{agent.license_expiry}</h3>
+                </div>
+                <div className="flex flex-col gap-[0.5rem] overflow-hidden">
+                    <Label htmlFor="email">Verification docs</Label>
+                    <a href={agent.verification_docs} className="hover:text-blue-500">
+                        Link
+                    </a>
+                </div>
+                {/* </div> */}
             </div>
-            <div className="flex flex-col gap-[0.5rem]">
-                <Label htmlFor="email">Last name</Label>
-                <h3>{agent.user.last_name}</h3>
-            </div>
-            <div className="flex flex-col gap-[0.5rem]">
-                <Label htmlFor="email">Email</Label>
-                <h3>{agent.user.email}</h3>
-            </div>
-            {/* </div> */}
-            {/* <DropdownMenuSeparator /> */}
-            {/* <div className="flex w-full justify-between"> */}
-            <div className="flex flex-col gap-[0.5rem]">
-                <Label htmlFor="email">Phone</Label>
-                <h3>{agent.user.phone}</h3>
-            </div>
-            <div className="flex flex-col gap-[0.5rem]">
-                <Label htmlFor="email">Prefered Contact</Label>
-                <h3>{agent.user.preferred_contact}</h3>
-            </div>
-            <div className="flex flex-col gap-[0.5rem]">
-                <Label htmlFor="email">Created at</Label>
-                <h3>{new Date(agent.user.created_at).toLocaleDateString()}</h3>
-            </div>
-            <div className="flex flex-col gap-[0.5rem]">
-                <Label htmlFor="email">License Number</Label>
-                <h3>{agent.license_number}</h3>
-            </div>
-            <div className="flex flex-col gap-[0.5rem]">
-                <Label htmlFor="email">License Expiry</Label>
-                <h3>{agent.license_expiry}</h3>
-            </div>
-            <div className="flex flex-col gap-[0.5rem] overflow-hidden">
-                <Label htmlFor="email">Verification docs</Label>
-                <a href={agent.verification_docs} className="hover:text-blue-500">
-                    Link
-                </a>
-            </div>
-            {/* </div> */}
-        </div>
+            <hr />
+        </>
     );
 }
 
@@ -141,7 +146,25 @@ export default withAppShell(function AgentPage() {
                                                             Close
                                                         </Button>
                                                     </DialogClose>
-                                                    <Button variant={agent.is_verified ? 'destructive' : ''}>
+                                                    <Button
+                                                        onClick={async () => {
+                                                            try {
+                                                                var { data: axres } = await axiosInstance.patch(`/agents/${agent.id}/verify`, {
+                                                                    is_verified: !agent.is_verified,
+                                                                });
+                                                                if (agent.is_verified) {
+                                                                    toast.warn('Successfully Blocked');
+                                                                } else {
+                                                                    toast.success('Successfully Verified');
+                                                                }
+                                                            } catch (error) {
+                                                                toast.error('Server Error Occured');
+                                                            }
+                                                            handleAgentAdded();
+                                                            closeDialog();
+                                                        }}
+                                                        variant={agent.is_verified ? 'destructive' : ''}
+                                                    >
                                                         {agent.is_verified ? 'Block Agent' : 'Verify Agent'}
                                                     </Button>
                                                 </>

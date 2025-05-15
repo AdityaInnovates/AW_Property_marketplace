@@ -1,16 +1,23 @@
 import { AddUserDialog } from '@/components/add-user-dialog';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+import { closeDialog, DialogBox } from '../components/dialog-box';
+import OwnersTableRows from '../components/OwnersTableRows';
 import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 
 export default withAppShell(function NonAgentPage() {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
+    const [open, setOpen] = useState(false);
 
     // Fetch non-agent users only
     async function fetchUsers() {
@@ -24,6 +31,44 @@ export default withAppShell(function NonAgentPage() {
     }, []);
     function handleOwnerAdded() {
         fetchUsers();
+    }
+    function popoverChild(user) {
+        return (
+            <>
+                <div className="grid grid-cols-3 flex-col gap-[1rem] gap-y-[1.5rem]">
+                    {/* <div className="flex w-full justify-between"> */}
+                    <div className="flex flex-col gap-[0.5rem]">
+                        <Label htmlFor="email">First name</Label>
+                        <h3>{user.user.first_name}</h3>
+                    </div>
+                    <div className="flex flex-col gap-[0.5rem]">
+                        <Label htmlFor="email">Last name</Label>
+                        <h3>{user.user.last_name}</h3>
+                    </div>
+                    <div className="flex flex-col gap-[0.5rem]">
+                        <Label htmlFor="email">Email</Label>
+                        <h3>{user.user.email}</h3>
+                    </div>
+                    {/* </div> */}
+                    {/* <DropdownMenuSeparator /> */}
+                    {/* <div className="flex w-full justify-between"> */}
+                    <div className="flex flex-col gap-[0.5rem]">
+                        <Label htmlFor="email">Phone</Label>
+                        <h3>{user.user.phone}</h3>
+                    </div>
+                    <div className="flex flex-col gap-[0.5rem]">
+                        <Label htmlFor="email">Prefered Contact</Label>
+                        <h3>{user.user.preferred_contact}</h3>
+                    </div>
+                    <div className="flex flex-col gap-[0.5rem]">
+                        <Label htmlFor="email">Created at</Label>
+                        <h3>{new Date(user.user.created_at).toLocaleDateString()}</h3>
+                    </div>
+                    {/* </div> */}
+                </div>
+                <hr />
+            </>
+        );
     }
 
     return (
@@ -77,29 +122,39 @@ export default withAppShell(function NonAgentPage() {
                                             return searchCondition;
                                         })
                                         .map((user) => (
-                                            <TableRow key={user.id}>
-                                                <TableCell className="p-[1rem] font-medium">
-                                                    <div className="flex items-center gap-2">
-                                                        <img
-                                                            src={
-                                                                user.user.profile_picture ||
-                                                                'https://api.dicebear.com/9.x/initials/svg?seed=' +
-                                                                    user.user.first_name +
-                                                                    user.user?.email
-                                                            }
-                                                            alt={`${user.user.first_name} ${user.user.last_name}`}
-                                                            className="h-8 w-8 rounded-full"
-                                                        />
-                                                        <span>
-                                                            {user.user.first_name} {user.user.last_name}
-                                                        </span>
-                                                    </div>
-                                                </TableCell>
-                                                <TableCell className="p-[1rem]">{user.user.email}</TableCell>
-                                                <TableCell className="p-[1rem]">{user.user.phone}</TableCell>
-                                                <TableCell className="p-[1rem]">{new Date(user.created_at).toLocaleDateString()}</TableCell>
-                                                <TableCell className="p-[1rem]">{user.user.preferred_contact || 'N/A'}</TableCell>
-                                            </TableRow>
+                                            <DialogBox
+                                                key={user.id}
+                                                title="Owner Information"
+                                                description={'about ' + user.user.first_name}
+                                                footer={
+                                                    <>
+                                                        <DialogClose asChild>
+                                                            <Button type="button" variant="outline">
+                                                                Close
+                                                            </Button>
+                                                        </DialogClose>
+                                                        <Button
+                                                            onClick={async () => {
+                                                                try {
+                                                                    var { data: axres } = await axiosInstance.delete('/owners/' + user.id);
+                                                                    toast.success('Successfully deleted');
+                                                                } catch (error) {
+                                                                    toast.success('Unable to deleted');
+                                                                }
+                                                                handleOwnerAdded();
+                                                                closeDialog();
+                                                            }}
+                                                            variant={'destructive'}
+                                                            className="cursor-pointer"
+                                                        >
+                                                            {'Delete User'}
+                                                        </Button>
+                                                    </>
+                                                }
+                                                trigger={<OwnersTableRows user={user} />}
+                                            >
+                                                {popoverChild(user)}
+                                            </DialogBox>
                                         ))}
                                 </TableBody>
                             </Table>

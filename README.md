@@ -54,6 +54,7 @@ This is the backend for the AM Properties project. The backend is built using La
     DB_PASSWORD=your_password
     APP_URL=http://localhost:8000
     VITE_API_BASE_URL=http://localhost:8000/api
+    PANEL_ACCESS_KEY=1234  # Important: Change this key for security. This key is used to log in to the admin panel.
     ```
 
 6. Run migrations to create the database tables:
