@@ -11,7 +11,7 @@ class OwnerController extends Controller
 {
     public function index()
     {
-        return response()->json(Owner::all());
+        return response()->json(Owner::with(['user'])->get());
     }
 
     public function show($id)

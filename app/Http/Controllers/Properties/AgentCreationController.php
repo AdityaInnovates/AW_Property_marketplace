@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Validation\ValidationException;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
 
 class AgentCreationController extends Controller
 {
@@ -28,7 +29,7 @@ class AgentCreationController extends Controller
             'license_number' => 'required|string',
             'license_expiry' => 'required|date',
             'is_verified' => 'nullable|boolean',
-            'verification_docs' => 'nullable|string',
+            'verification_docs' => 'nullable|file|mimes:pdf,doc,docx,png,jpg,jpeg|max:2048',
             'preferred_contact'=>'nullable|string',
         ]);
 
@@ -45,13 +46,21 @@ class AgentCreationController extends Controller
             ]);
             // Log::info('User created', ['user_id' => $user->id]);
 
+            $verificationDocsPath = null;
+            if ($request->hasFile('verification_docs')) {
+                $file = $request->file('verification_docs');
+                $filename = time() . '_' . $file->getClientOriginalName();
+                $verificationDocsPath = $file->storeAs('verification_docs', $filename, 'public');
+                $verificationDocsPath = Storage::url($verificationDocsPath);
+            }
+
             $agent = Agent::create([
                 'user_id' => $user->id,
                 'agent_type' => $request->agent_type,
                 'license_number' => $request->license_number,
                 'license_expiry' => $request->license_expiry,
-                'is_verified' => $request->is_verified ?? false,
-                'verification_docs' => $request->verification_docs,
+                'is_verified' => filter_var($request->is_verified, FILTER_VALIDATE_BOOLEAN),
+                'verification_docs' => $verificationDocsPath,
             ]);
             // Log::info('Agent created', ['agent_id' => $agent->id]);
 

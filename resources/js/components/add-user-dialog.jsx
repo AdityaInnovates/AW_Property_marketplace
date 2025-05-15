@@ -8,9 +8,14 @@ import { Textarea } from '@/components/ui/textarea';
 import axiosInstance from '@/lib/axiosInstance';
 // import { useToast } from '@/hooks/use-toast';
 // import { addUser } from '@/lib/api-mock';
-import { Plus } from 'lucide-react';
+import { format } from 'date-fns';
+import { CalendarIcon, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+
+import { Calendar } from '@/components/ui/calendar';
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover';
+import { cn } from '@/lib/utils';
 
 const initialFormData = {
     email: '',
@@ -33,7 +38,7 @@ const initialFormData = {
     developer_name: '',
 };
 
-export function AddUserDialog({ onUserAdded }) {
+export function AddUserDialog({ onUserAdded, user_type }) {
     const [open, setOpen] = useState(false);
     const [formData, setFormData] = useState(initialFormData);
     const [isSubmitting, setIsSubmitting] = useState(false);
@@ -47,8 +52,12 @@ export function AddUserDialog({ onUserAdded }) {
     }, [open]);
 
     const handleChange = (e) => {
-        const { name, value } = e.target;
-        setFormData((prev) => ({ ...prev, [name]: value }));
+        const { name, type, value, files } = e.target;
+        if (name === 'verification_docs' && type === 'file') {
+            setFormData((prev) => ({ ...prev, [name]: files[0] }));
+        } else {
+            setFormData((prev) => ({ ...prev, [name]: value }));
+        }
     };
 
     const handleSelectChange = (name, value) => {
@@ -59,18 +68,18 @@ export function AddUserDialog({ onUserAdded }) {
         setIsSubmitting(true);
 
         try {
-            switch (formData.user_type) {
+            switch (user_type) {
                 case 'owner':
-                    if (CurrentStage == 'owner') {
-                        var { data: axres } = await axiosInstance.post('/owner-create', formData);
-                        if (axres?.errors && axres?.errors?.length > 0) {
-                            toast.error(axres.message);
-                        } else {
-                            toast.success(`${formData.first_name} ${formData.last_name} has been added to the system.`);
-                        }
+                    // if (CurrentStage == 'owner') {
+                    var { data: axres } = await axiosInstance.post('/owner-create', formData);
+                    if (axres?.errors && axres?.errors?.length > 0) {
+                        toast.error(axres.message);
                     } else {
-                        setCurrentStage('owner');
+                        toast.success(`${formData.first_name} ${formData.last_name} has been added to the system.`);
                     }
+                    // } else {
+                    //     setCurrentStage('owner');
+                    // }
                     break;
                 case 'buyer':
                     var { data: axres } = await axiosInstance.post('/buyer-create', formData);
@@ -82,7 +91,21 @@ export function AddUserDialog({ onUserAdded }) {
                     break;
                 case 'agent':
                     if (CurrentStage == 'agent') {
-                        var { data: axres } = await axiosInstance.post('/agent-create', formData);
+                        const formDataToSend = new FormData();
+                        for (const key in formData) {
+                            if (key === 'is_verified') {
+                                formDataToSend.append(key, formData[key] === true ? '1' : '0');
+                            } else {
+                                formDataToSend.append(key, formData[key] || '');
+                            }
+                        }
+
+                        var { data: axres } = await axiosInstance.post('/agent-create', formDataToSend, {
+                            headers: {
+                                'Content-Type': 'multipart/form-data',
+                            },
+                        });
+
                         if (axres?.errors && axres?.errors?.length > 0) {
                             toast.error(axres.message);
                         } else {
@@ -97,8 +120,8 @@ export function AddUserDialog({ onUserAdded }) {
                     break;
             }
             // await addUser(formData);
-            const exceptUserTypeMethods = ['buyer'];
-            if (CurrentStage == 'agent' || CurrentStage == 'owner' || exceptUserTypeMethods.includes(formData.user_type)) {
+            const exceptUserTypeMethods = ['owner'];
+            if (CurrentStage == 'agent' || exceptUserTypeMethods.includes(user_type)) {
                 setOpen(false);
                 setFormData(initialFormData);
                 onUserAdded();
@@ -109,7 +132,7 @@ export function AddUserDialog({ onUserAdded }) {
             } else {
                 toast.error('There was a problem adding the user. Please try again.');
             }
-            console.error('Error adding user:', error.response.data);
+            console.error('Error adding user:', error?.response?.data || error);
         } finally {
             setIsSubmitting(false);
         }
@@ -120,11 +143,12 @@ export function AddUserDialog({ onUserAdded }) {
             <DialogTrigger asChild>
                 <Button onClick={() => setOpen(true)}>
                     <Plus className="mr-2 h-4 w-4" />
-                    Add User
+                    Add {user_type.charAt(0).toUpperCase() + user_type.slice(1)}
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[525px]">
-                {CurrentStage == 'owner' ? (
+                <>
+                    {/*CurrentStage == 'owner' ? (
                     <form onSubmit={handleSubmit}>
                         <DialogHeader>
                             <DialogTitle>Add New Owner</DialogTitle>
@@ -142,7 +166,7 @@ export function AddUserDialog({ onUserAdded }) {
                                     required
                                 />
                             </div>
-                            <div className="flex items-center space-x-2">
+                            <div className="/flex items-center space-x-2 hidden">
                                 <Switch
                                     id="airplane-mode"
                                     checked={formData.is_verified}
@@ -176,7 +200,9 @@ export function AddUserDialog({ onUserAdded }) {
                             </Button>
                         </DialogFooter>
                     </form>
-                ) : CurrentStage == 'agent' ? (
+                ) :*/}
+                </>
+                {CurrentStage == 'agent' ? (
                     <form onSubmit={handleSubmit}>
                         <DialogHeader>
                             <DialogTitle>Add New Agent</DialogTitle>
@@ -197,34 +223,72 @@ export function AddUserDialog({ onUserAdded }) {
                                 </div>
                                 <div className="space-y-2">
                                     <Label htmlFor="license_expiry">License expiry</Label>
-                                    <Input
+                                    <Popover>
+                                        <PopoverTrigger asChild>
+                                            <Button
+                                                variant={'outline'}
+                                                className={cn(
+                                                    '/w-[280px] w-full justify-start text-left font-normal',
+                                                    !formData.license_expiry && 'text-muted-foreground',
+                                                )}
+                                            >
+                                                <CalendarIcon className="mr-2 h-4 w-4" />
+                                                {formData.license_expiry ? (
+                                                    format(new Date(formData.license_expiry), 'dd-MM-yyyy')
+                                                ) : (
+                                                    <span>Pick a date</span>
+                                                )}
+                                            </Button>
+                                        </PopoverTrigger>
+                                        <PopoverContent className="pointer-events-auto w-auto p-0">
+                                            <Calendar
+                                                mode="single"
+                                                selected={formData.license_expiry ? new Date(formData.license_expiry) : undefined}
+                                                onSelect={(val) => {
+                                                    if (val) {
+                                                        try {
+                                                            const formattedDate = format(val, 'yyyy-MM-dd');
+                                                            setFormData((prev) => ({ ...prev, ['license_expiry']: formattedDate }));
+                                                        } catch (error) {
+                                                            console.error('Error formatting date:', error);
+                                                            toast.error('Invalid date selected. Please try again.');
+                                                        }
+                                                    }
+                                                }}
+                                                initialFocus
+                                            />
+                                        </PopoverContent>
+                                    </Popover>
+                                    {/* <Input
+                                        type="date"
                                         id="license_expiry"
                                         name="license_expiry"
-                                        placeholder="2025-10-10"
+                                        // placeholder="2025-10-10"
                                         value={formData.license_expiry}
                                         onChange={handleChange}
                                         required
-                                    />
+                                    /> */}
                                 </div>
                             </div>
                             <div className="grid grid-cols-2">
-                                <div className="space-y-2">
+                                <>
+                                    {/* <div className="space-y-2">
                                     <Label htmlFor="user_type">Agent Type</Label>
                                     <Select value={formData.agent_type} onValueChange={(value) => handleSelectChange('agent_type', value)}>
                                         <SelectTrigger id="agent_type">
                                             <SelectValue placeholder={'Select Agent type'} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {/* <SelectItem value="" defaultChecked>
-                                                     Select user type
-                                                     </SelectItem> */}
+                                            <SelectItem value="" defaultChecked>
+                                                Select user type
+                                            </SelectItem>
                                             <SelectItem value="AG1">AG1</SelectItem>
                                             <SelectItem value="AG2">AG2</SelectItem>
-                                            {/* <SelectItem value="admin">Admin</SelectItem> */}
                                         </SelectContent>
                                     </Select>
-                                </div>
-                                <div className="flex items-center space-x-2">
+                                </div> */}
+                                </>
+                                <div className="/flex hidden items-center space-x-2">
                                     <Switch
                                         id="airplane-mode"
                                         checked={formData.is_verified}
@@ -238,10 +302,11 @@ export function AddUserDialog({ onUserAdded }) {
                             <div className="space-y-2">
                                 <Label htmlFor="verification_docs">Verification Docs</Label>
                                 <Input
+                                    type="file"
                                     id="verification_docs"
                                     name="verification_docs"
                                     placeholder="Enter links of the verification docs"
-                                    value={formData.verification_docs}
+                                    // value={formData.verification_docs}
                                     onChange={handleChange}
                                 />
                             </div>
@@ -262,8 +327,8 @@ export function AddUserDialog({ onUserAdded }) {
                 ) : (
                     <form onSubmit={handleSubmit}>
                         <DialogHeader>
-                            <DialogTitle>Add New User</DialogTitle>
-                            <DialogDescription>Fill in the details to create a new user account.</DialogDescription>
+                            <DialogTitle>Add New {user_type.charAt(0).toUpperCase() + user_type.slice(1)}</DialogTitle>
+                            <DialogDescription>Fill in the details to create a new {user_type} account.</DialogDescription>
                         </DialogHeader>
                         <div className="grid gap-4 py-4">
                             <div className="grid grid-cols-2 gap-4">
@@ -289,46 +354,24 @@ export function AddUserDialog({ onUserAdded }) {
                                 <Input id="phone" name="phone" value={formData.phone} onChange={handleChange} required />
                             </div>
                             <div className="/gap-4 grid grid-cols-3">
-                                <div className="space-y-2">
+                                <>
+                                    {/* <div className="space-y-2">
                                     <Label htmlFor="user_type">User Type</Label>
                                     <Select value={formData.user_type} onValueChange={(value) => handleSelectChange('user_type', value)}>
                                         <SelectTrigger id="user_type">
                                             <SelectValue placeholder={'Select user type'} />
                                         </SelectTrigger>
                                         <SelectContent>
-                                            {/* <SelectItem value="" defaultChecked>
+                                            <SelectItem value="" defaultChecked>
                                             Select user type
-                                        </SelectItem> */}
+                                        </SelectItem>
                                             <SelectItem value="buyer">Buyer</SelectItem>
                                             <SelectItem value="agent">Agent</SelectItem>
                                             <SelectItem value="owner">Owner</SelectItem>
-                                            {/* <SelectItem value="admin">Admin</SelectItem> */}
                                         </SelectContent>
                                     </Select>
-                                </div>
-                                {
-                                    // formData.user_type == 'agent' && (
-                                    //     <div className="space-y-2">
-                                    //         <Label htmlFor="user_type">Agent Type</Label>
-                                    //         <Select
-                                    //             value={formData.agent_type || 'AG1'}
-                                    //             onValueChange={(value) => handleSelectChange('agent_type', value)}
-                                    //         >
-                                    //             <SelectTrigger id="agent_type">
-                                    //                 <SelectValue placeholder={'Select Agent type'} />
-                                    //             </SelectTrigger>
-                                    //             <SelectContent>
-                                    //                 {/* <SelectItem value="" defaultChecked>
-                                    //                 Select user type
-                                    //             </SelectItem> */}
-                                    //                 <SelectItem value="AG1">AG1</SelectItem>
-                                    //                 <SelectItem value="AG2">AG2</SelectItem>
-                                    //                 {/* <SelectItem value="admin">Admin</SelectItem> */}
-                                    //             </SelectContent>
-                                    //         </Select>
-                                    //     </div>
-                                    // )
-                                }
+                                </div> */}
+                                </>
                                 <div className="space-y-2">
                                     <Label htmlFor="preferred_contact">Preferred Contact</Label>
                                     <Select
@@ -365,7 +408,7 @@ export function AddUserDialog({ onUserAdded }) {
                                 Cancel
                             </Button>
                             <Button type="submit" disabled={isSubmitting}>
-                                {isSubmitting ? 'Adding...' : 'Add User'}
+                                {isSubmitting ? 'Adding...' : 'Add ' + user_type.charAt(0).toUpperCase() + user_type.slice(1)}
                             </Button>
                         </DialogFooter>
                     </form>

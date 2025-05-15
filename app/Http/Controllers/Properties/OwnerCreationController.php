@@ -24,7 +24,7 @@ class OwnerCreationController extends Controller
             'is_verified' => 'nullable|boolean',
             'verification_docs' => 'nullable|string',
             'preferred_contact'=>'nullable|string',
-            'developer_name'=>'required|string'
+            'developer_name'=>'nullable|string'
             // Add owner-specific validation rules here if any
         ]);
 

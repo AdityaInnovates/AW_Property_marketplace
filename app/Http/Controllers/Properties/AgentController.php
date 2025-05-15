@@ -11,7 +11,7 @@ class AgentController extends Controller
 {
     public function index()
     {
-        return response()->json(Agent::all());
+        return response()->json(Agent::with(['user'])->get());
     }
 
     public function show($id)

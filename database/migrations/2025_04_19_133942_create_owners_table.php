@@ -11,7 +11,7 @@ return new class extends Migration
         Schema::create('owners', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->unique()->constrained()->onDelete('cascade');
-            $table->string('developer_name');
+            $table->string('developer_name')->nullable();
             $table->boolean('is_verified')->default(false);
             $table->text('verification_docs')->nullable();
             $table->foreignId('invited_by_agent_id')->nullable()->constrained('agents')->onDelete('set null');

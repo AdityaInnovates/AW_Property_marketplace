@@ -1,33 +1,37 @@
-import { Button } from '@/components/ui/button';
+import { AddUserDialog } from '@/components/add-user-dialog';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 
-export default function NonAgentPage() {
+export default withAppShell(function NonAgentPage() {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
 
     // Fetch non-agent users only
     async function fetchUsers() {
-        var { data: axres } = await axiosInstance.get('/users'); // Fetch all users
-        const nonAgentUsers = axres.filter((user) => user.user_type !== 'agent'); // Filter out agents
-        setUsers(nonAgentUsers);
+        var { data: axres } = await axiosInstance.get('/owners'); // Fetch all users
+        // const nonAgentUsers = axres.filter((user) => user.user_type !== 'agent'); // Filter out agents
+        setUsers(axres);
     }
 
     useEffect(() => {
         fetchUsers();
     }, []);
+    function handleOwnerAdded() {
+        fetchUsers();
+    }
 
     return (
-        <div className="w-[80%] p-[4rem]">
+        <div className="w-[100%] p-[4rem]">
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Non-Agent Users</h1>
-                    <Button variant="outline" onClick={fetchUsers}>Refresh</Button>  {/* Refresh the user list */}
+                    <AddUserDialog onUserAdded={handleOwnerAdded} user_type={'owner'} />
                 </div>
 
                 <Card>
@@ -62,39 +66,41 @@ export default function NonAgentPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {users.filter((user) => {
-                                        const searchTerm = search.toLowerCase();
-                                        const fullName = `${user.first_name} ${user.last_name}`.toLowerCase();
-                                        const searchCondition =
-                                            user.email.toLowerCase().includes(searchTerm) ||
-                                            fullName.includes(searchTerm) ||
-                                            user.phone.includes(searchTerm);
-                                        return searchCondition;
-                                    }).map((user) => (
-                                        <TableRow key={user.id}>
-                                            <TableCell className="p-[1rem] font-medium">
-                                                <div className="flex items-center gap-2">
-                                                    <img
-                                                        src={
-                                                            user.profile_picture ||
-                                                            'https://api.dicebear.com/9.x/initials/svg?seed=' + user.first_name + user?.email
-                                                        }
-                                                        alt={`${user.first_name} ${user.last_name}`}
-                                                        className="h-8 w-8 rounded-full"
-                                                    />
-                                                    <span>
-                                                        {user.first_name} {user.last_name}
-                                                    </span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="p-[1rem]">{user.email}</TableCell>
-                                            <TableCell className="p-[1rem]">{user.phone}</TableCell>
-                                            <TableCell className="p-[1rem]">
-                                                {new Date(user.created_at).toLocaleDateString()} {/* Display registration date */}
-                                            </TableCell>
-                                            <TableCell className="p-[1rem]">{user.preferred_contact || 'N/A'}</TableCell>
-                                        </TableRow>
-                                    ))}
+                                    {users
+                                        .filter((user) => {
+                                            const searchTerm = search.toLowerCase();
+                                            const fullName = `${user.user.first_name} ${user.user.last_name}`.toLowerCase();
+                                            const searchCondition =
+                                                user.user.email.toLowerCase().includes(searchTerm) ||
+                                                fullName.includes(searchTerm) ||
+                                                user.user.phone.includes(searchTerm);
+                                            return searchCondition;
+                                        })
+                                        .map((user) => (
+                                            <TableRow key={user.id}>
+                                                <TableCell className="p-[1rem] font-medium">
+                                                    <div className="flex items-center gap-2">
+                                                        <img
+                                                            src={
+                                                                user.user.profile_picture ||
+                                                                'https://api.dicebear.com/9.x/initials/svg?seed=' +
+                                                                    user.user.first_name +
+                                                                    user.user?.email
+                                                            }
+                                                            alt={`${user.user.first_name} ${user.user.last_name}`}
+                                                            className="h-8 w-8 rounded-full"
+                                                        />
+                                                        <span>
+                                                            {user.user.first_name} {user.user.last_name}
+                                                        </span>
+                                                    </div>
+                                                </TableCell>
+                                                <TableCell className="p-[1rem]">{user.user.email}</TableCell>
+                                                <TableCell className="p-[1rem]">{user.user.phone}</TableCell>
+                                                <TableCell className="p-[1rem]">{new Date(user.created_at).toLocaleDateString()}</TableCell>
+                                                <TableCell className="p-[1rem]">{user.user.preferred_contact || 'N/A'}</TableCell>
+                                            </TableRow>
+                                        ))}
                                 </TableBody>
                             </Table>
                         </div>
@@ -127,4 +133,4 @@ export default function NonAgentPage() {
             </div>
         </div>
     );
-}
+});

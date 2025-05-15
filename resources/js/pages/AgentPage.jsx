@@ -1,23 +1,76 @@
 import { AddUserDialog } from '@/components/add-user-dialog';
-import { Badge } from '@/components/ui/badge';
+import AgentTableRow from '@/components/AgentTableRow';
+import DialogBox from '@/components/dialog-box';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DialogClose } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
+import { Table, TableBody, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Search } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
+import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 
-export default function AgentPage() {
+function popoverChild(agent) {
+    return (
+        <div className="grid grid-cols-3 flex-col gap-[1rem] gap-y-[1.5rem]">
+            {/* <div className="flex w-full justify-between"> */}
+            <div className="flex flex-col gap-[0.5rem]">
+                <Label htmlFor="email">First name</Label>
+                <h3>{agent.user.first_name}</h3>
+            </div>
+            <div className="flex flex-col gap-[0.5rem]">
+                <Label htmlFor="email">Last name</Label>
+                <h3>{agent.user.last_name}</h3>
+            </div>
+            <div className="flex flex-col gap-[0.5rem]">
+                <Label htmlFor="email">Email</Label>
+                <h3>{agent.user.email}</h3>
+            </div>
+            {/* </div> */}
+            {/* <DropdownMenuSeparator /> */}
+            {/* <div className="flex w-full justify-between"> */}
+            <div className="flex flex-col gap-[0.5rem]">
+                <Label htmlFor="email">Phone</Label>
+                <h3>{agent.user.phone}</h3>
+            </div>
+            <div className="flex flex-col gap-[0.5rem]">
+                <Label htmlFor="email">Prefered Contact</Label>
+                <h3>{agent.user.preferred_contact}</h3>
+            </div>
+            <div className="flex flex-col gap-[0.5rem]">
+                <Label htmlFor="email">Created at</Label>
+                <h3>{new Date(agent.user.created_at).toLocaleDateString()}</h3>
+            </div>
+            <div className="flex flex-col gap-[0.5rem]">
+                <Label htmlFor="email">License Number</Label>
+                <h3>{agent.license_number}</h3>
+            </div>
+            <div className="flex flex-col gap-[0.5rem]">
+                <Label htmlFor="email">License Expiry</Label>
+                <h3>{agent.license_expiry}</h3>
+            </div>
+            <div className="flex flex-col gap-[0.5rem] overflow-hidden">
+                <Label htmlFor="email">Verification docs</Label>
+                <a href={agent.verification_docs} className="hover:text-blue-500">
+                    Link
+                </a>
+            </div>
+            {/* </div> */}
+        </div>
+    );
+}
+
+export default withAppShell(function AgentPage() {
     const [agents, setAgents] = useState([]);
     const [search, setSearch] = useState('');
 
     // Fetch agents only
     async function fetchAgents() {
-        var { data: axres } = await axiosInstance.get('/agents'); // Fetch all users
-        const filteredAgents = axres.filter((user) => user.user_type === 'agent'); // Filter out only agents
-        setAgents(filteredAgents);
+        var { data: axres } = await axiosInstance.get('/agents');
+        setAgents(axres);
     }
 
     useEffect(() => {
@@ -28,18 +81,20 @@ export default function AgentPage() {
         fetchAgents();
     }
 
-    async function handleAddAgent() {
-        await axiosInstance.post('/addagent', {
+    const filteredAgents = useMemo(() => {
+        return agents.filter((agent) => {
+            const searchTerm = search.toLowerCase();
+            const fullName = `${agent.user.first_name} ${agent.user.last_name}`.toLowerCase();
+            return agent.user.email.toLowerCase().includes(searchTerm) || fullName.includes(searchTerm) || agent.user.phone.includes(searchTerm);
         });
-        handleAgentAdded();
-    }
+    }, [agents, search]);
 
     return (
-        <div className="w-[80%] p-[4rem]">
+        <div className="w-[100%] p-[4rem]">
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Agents</h1>
-                    <Button variant="outline" onClick={handleAddAgent}>Add Agent</Button>
+                    <AddUserDialog onUserAdded={handleAgentAdded} user_type={'agent'} />
                 </div>
 
                 <Card>
@@ -74,43 +129,27 @@ export default function AgentPage() {
                                     </TableRow>
                                 </TableHeader>
                                 <TableBody>
-                                    {agents.filter((agent) => {
-                                        const searchTerm = search.toLowerCase();
-                                        const fullName = `${agent.first_name} ${agent.last_name}`.toLowerCase();
-                                        const searchCondition =
-                                            agent.email.toLowerCase().includes(searchTerm) ||
-                                            fullName.includes(searchTerm) ||
-                                            agent.phone.includes(searchTerm);
-                                        return searchCondition;
-                                    }).map((agent) => (
-                                        <TableRow key={agent.id}>
-                                            <TableCell className="p-[1rem] font-medium">
-                                                <div className="flex items-center gap-2">
-                                                    <img
-                                                        src={
-                                                            agent.profile_picture ||
-                                                            'https://api.dicebear.com/9.x/initials/svg?seed=' + agent.first_name + agent?.email
-                                                        }
-                                                        alt={`${agent.first_name} ${agent.last_name}`}
-                                                        className="h-8 w-8 rounded-full"
-                                                    />
-                                                    <span>
-                                                        {agent.first_name} {agent.last_name}
-                                                    </span>
-                                                </div>
-                                            </TableCell>
-                                            <TableCell className="p-[1rem]">{agent.email}</TableCell>
-                                            <TableCell className="p-[1rem]">{agent.phone}</TableCell>
-                                            <TableCell className="p-[1rem]">
-                                                <input
-                                                    type="checkbox"
-                                                    checked={agent.is_verified}
-                                                    disabled
-                                                    className="cursor-not-allowed"
-                                                />
-                                            </TableCell>
-                                            <TableCell className="p-[1rem]">{agent.preferred_contact || 'N/A'}</TableCell>
-                                        </TableRow>
+                                    {filteredAgents.map((agent) => (
+                                        <DialogBox
+                                            key={agent.id}
+                                            title="Agent Information"
+                                            description={'about ' + agent.user.first_name}
+                                            footer={
+                                                <>
+                                                    <DialogClose asChild>
+                                                        <Button type="button" variant="outline">
+                                                            Close
+                                                        </Button>
+                                                    </DialogClose>
+                                                    <Button variant={agent.is_verified ? 'destructive' : ''}>
+                                                        {agent.is_verified ? 'Block Agent' : 'Verify Agent'}
+                                                    </Button>
+                                                </>
+                                            }
+                                            trigger={<AgentTableRow agent={agent} />}
+                                        >
+                                            {popoverChild(agent)}
+                                        </DialogBox>
                                     ))}
                                 </TableBody>
                             </Table>
@@ -144,4 +183,4 @@ export default function AgentPage() {
             </div>
         </div>
     );
-}
+});

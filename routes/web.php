@@ -8,12 +8,18 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/', function () {
-        return Inertia::render('UsersPage');
+        return Inertia::render('AgentPage');
     })->name('home');
     
     Route::get('/users', function () {
         return Inertia::render('UsersPage');
     })->name('UsersPage');
+    Route::get('/agents', function () {
+        return Inertia::render('AgentPage');
+    })->name('AgentPage');
+    Route::get('/owners', function () {
+        return Inertia::render('NonAgentPage');
+    })->name('OwnerPage');
     
     Route::get('/properties', function () {
         return Inertia::render('ProperitesPage');
