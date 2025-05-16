@@ -74,13 +74,13 @@ export default function NonAgentPage() {
         <div className="w-[100%] p-[4rem]">
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
-                    <h1 className="text-3xl font-bold">Non-Agent Users</h1>
+                    <h1 className="text-3xl font-bold">Clients</h1>
                     <AddUserDialog onUserAdded={handleOwnerAdded} user_type={'owner'} />
                 </div>
 
                 <Card>
                     <CardHeader className="pb-3">
-                        <CardTitle>All Non-Agent Users</CardTitle>
+                        <CardTitle>All Clients</CardTitle>
                     </CardHeader>
                     <CardContent>
                         <div className="mb-4 flex flex-col gap-4 md:flex-row md:items-center md:justify-between">

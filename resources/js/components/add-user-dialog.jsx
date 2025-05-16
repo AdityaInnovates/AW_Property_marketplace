@@ -143,7 +143,7 @@ export function AddUserDialog({ onUserAdded, user_type }) {
             <DialogTrigger asChild>
                 <Button onClick={() => setOpen(true)}>
                     <Plus className="mr-2 h-4 w-4" />
-                    Add {user_type.charAt(0).toUpperCase() + user_type.slice(1)}
+                    Add {user_type == 'owner' ? 'Client' : user_type.charAt(0).toUpperCase() + user_type.slice(1)}
                 </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[525px]">
