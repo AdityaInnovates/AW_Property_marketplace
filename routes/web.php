@@ -3,7 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
-
+use App\Http\Controllers\Properties\PropertyController;
 
 
 Route::middleware(['auth', 'verified'])->group(function () {
@@ -28,6 +28,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/transactions', function () {
         return Inertia::render('DealsPage');
     })->name('transactions');
+
+    // Route::middleware(['auth', 'verified'])->group(function () {
+    // Route::get('/properties/create', function () {
+    //     return Inertia::render('CreateProperty');
+    // })->name('properties.create');
+
+//     Route::post('/properties', [PropertyController::class, 'store'])->name('properties.store');
+// });
+
 });
 
 require __DIR__.'/settings.php';
