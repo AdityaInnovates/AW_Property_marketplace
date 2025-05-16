@@ -12,7 +12,6 @@ import { Search } from 'lucide-react';
 import { useEffect, useMemo, useState } from 'react';
 import { toast } from 'react-toastify';
 import { closeDialog } from '../components/dialog-box';
-import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 
 function popoverChild(agent) {
@@ -68,9 +67,10 @@ function popoverChild(agent) {
     );
 }
 
-export default withAppShell(function AgentPage() {
+export default function AgentPage() {
     const [agents, setAgents] = useState([]);
     const [search, setSearch] = useState('');
+    const [filter, setFilter] = useState('all'); // all, active, pending, inactive
 
     // Fetch agents only
     async function fetchAgents() {
@@ -87,12 +87,32 @@ export default withAppShell(function AgentPage() {
     }
 
     const filteredAgents = useMemo(() => {
+        const now = new Date();
         return agents.filter((agent) => {
+            // Apply search filter
             const searchTerm = search.toLowerCase();
             const fullName = `${agent.user.first_name} ${agent.user.last_name}`.toLowerCase();
-            return agent.user.email.toLowerCase().includes(searchTerm) || fullName.includes(searchTerm) || agent.user.phone.includes(searchTerm);
+            const matchesSearch =
+                agent.user.email.toLowerCase().includes(searchTerm) || fullName.includes(searchTerm) || agent.user.phone.includes(searchTerm);
+
+            if (!matchesSearch) return false;
+
+            // Parse license expiry date
+            const expiryDate = new Date(agent.license_expiry);
+
+            // Apply status filter
+            if (filter === 'active') {
+                return agent.is_verified && expiryDate > now;
+            } else if (filter === 'pending') {
+                return !agent.is_verified && expiryDate > now;
+            } else if (filter === 'inactive') {
+                return expiryDate <= now;
+            } else {
+                // 'all' filter
+                return true;
+            }
         });
-    }, [agents, search]);
+    }, [agents, search, filter]);
 
     return (
         <div className="w-[100%] p-[4rem]">
@@ -119,6 +139,20 @@ export default withAppShell(function AgentPage() {
                                         onChange={(e) => setSearch(e.target.value)}
                                     />
                                 </div>
+                            </div>
+                            <div className="flex gap-2">
+                                <Button variant={filter === 'all' ? 'default' : 'outline'} onClick={() => setFilter('all')}>
+                                    All
+                                </Button>
+                                <Button variant={filter === 'active' ? 'default' : 'outline'} onClick={() => setFilter('active')}>
+                                    Active
+                                </Button>
+                                <Button variant={filter === 'pending' ? 'default' : 'outline'} onClick={() => setFilter('pending')}>
+                                    Pending
+                                </Button>
+                                <Button variant={filter === 'inactive' ? 'default' : 'outline'} onClick={() => setFilter('inactive')}>
+                                    Inactive
+                                </Button>
                             </div>
                         </div>
 
@@ -206,4 +240,4 @@ export default withAppShell(function AgentPage() {
             </div>
         </div>
     );
-});
+}

@@ -15,7 +15,6 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Filter, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 // Mock data for users
 // const users = [
@@ -81,7 +80,7 @@ import axiosInstance from '../lib/axiosInstance';
 //     },
 // ];
 
-export default withAppShell(function UsersPage() {
+export default function UsersPage() {
     const [Users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [filterType, setFilterType] = useState('');
@@ -258,4 +257,4 @@ export default withAppShell(function UsersPage() {
             </div>
         </div>
     );
-});
+}

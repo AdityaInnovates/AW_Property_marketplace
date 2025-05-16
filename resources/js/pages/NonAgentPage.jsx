@@ -11,10 +11,9 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import { closeDialog, DialogBox } from '../components/dialog-box';
 import OwnersTableRows from '../components/OwnersTableRows';
-import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 
-export default withAppShell(function NonAgentPage() {
+export default function NonAgentPage() {
     const [users, setUsers] = useState([]);
     const [search, setSearch] = useState('');
     const [open, setOpen] = useState(false);
@@ -188,4 +187,4 @@ export default withAppShell(function NonAgentPage() {
             </div>
         </div>
     );
-});
+}

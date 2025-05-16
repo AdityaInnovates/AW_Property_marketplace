@@ -71,7 +71,7 @@ const deals = [
     },
 ];
 
-export default withAppShell(function DealsPage() {
+export default function DealsPage() {
     const [Deals, setDeals] = useState([]);
     useEffect(() => {
         (async () => {
@@ -245,4 +245,4 @@ export default withAppShell(function DealsPage() {
             </div>
         </div>
     );
-});
+};
