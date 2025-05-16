@@ -12,10 +12,12 @@ import {
 import { Input } from '@/components/ui/input';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { CheckCircle, Filter, Search, XCircle } from 'lucide-react';
+import { CheckCircle, Filter, Search, XCircle, Plus} from 'lucide-react';
 import { useEffect, useState } from 'react';
 import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
+import {AddPropertyDialog} from '@/components/AddPropertyDialog';
+
 
 // Mock data for properties
 const properties = [
@@ -90,10 +92,10 @@ export default withAppShell(function PropertiesPage() {
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Properties</h1>
-                    {/* <Button>
-                        <Plus className="mr-2 h-4 w-4" />
-                        Add Property
-                    </Button> */}
+                    <AddPropertyDialog onCreated={() => {
+                    // Re-fetch data when a new property is added
+                     axiosInstance.get('/properties').then(({ data }) => setProperties(data));}} />
+                    
                 </div>
 
                 <Card>
