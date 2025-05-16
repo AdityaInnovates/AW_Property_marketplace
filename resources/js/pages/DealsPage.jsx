@@ -14,7 +14,6 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { DollarSign, Filter, Search } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import withAppShell from '../hocs/withAppShell';
 import axiosInstance from '../lib/axiosInstance';
 
 // Mock data for deals
@@ -245,4 +244,4 @@ export default function DealsPage() {
             </div>
         </div>
     );
-};
+}
