@@ -100,7 +100,7 @@ export default function Sidebar() {
                                             router.visit(route('OwnerPage'));
                                         }}
                                     >
-                                        Owners
+                                        Clients
                                     </DropdownMenuItem>
                                 </div>
                             </DropdownMenuContent>
