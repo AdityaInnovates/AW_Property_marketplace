@@ -34,3 +34,6 @@ Route::resource('/api/addresses', AddressController::class);
 
 Route::resource('/api/property-media', PropertyMediaController::class);
 
+Route::patch('/api/properties/{id}/verify', [PropertyController::class, 'updatePropertyVerificationStatus']);
+
+

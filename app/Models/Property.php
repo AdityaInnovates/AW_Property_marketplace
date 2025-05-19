@@ -15,7 +15,7 @@ class Property extends Model
         'sale_or_rent',
         'address_id',
         'owner_id',
-        'created_by_agent',
+        'agent_id',
         'is_verified',
         'verification_docs',
         'status',
@@ -39,7 +39,7 @@ class Property extends Model
     // Relationship to Agent
     public function agent()
     {
-        return $this->belongsTo(Agent::class, 'created_by_agent');
+        return $this->belongsTo(Agent::class);
     }
 
     public function media()
@@ -56,4 +56,10 @@ class Property extends Model
     {
         return $this->hasMany(Deal::class);
     }
+
+    public function createdBy()
+{
+    return $this->belongsTo(User::class, 'created_by');
+}
+
 }

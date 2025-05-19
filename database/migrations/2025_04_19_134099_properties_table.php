@@ -18,7 +18,7 @@ return new class extends Migration
             $table->enum('sale_or_rent', ['sale', 'rent']);
             $table->foreignId('address_id')->constrained("addresses")->onDelete('cascade');
             $table->foreignId('owner_id')->constrained('owners')->onDelete('cascade');
-            $table->foreignId('created_by_agent')->constrained('agents')->onDelete('set null');
+            $table->foreignId('agent_id')->constrained('agents')->onDelete('set null');
             $table->boolean('is_verified')->default(false);
             $table->text('verification_docs')->nullable();
             $table->timestamps();

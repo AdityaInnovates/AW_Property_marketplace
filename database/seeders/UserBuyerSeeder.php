@@ -27,14 +27,14 @@ class UserBuyerSeeder extends Seeder
             'updated_at' => now(),
         ]);
 
-        $user_id = DB::table('users')->where('email', 'john.doe@example.com')->first()->id;
+        // $user_id = DB::table('users')->where('email', 'john.doe@example.com')->first()->id;
 
         // Create a buyer associated with the user
-        $buyer = DB::table('buyers')->insert([
-            'user_id' => $user_id,
-            'created_by_agent_id' => null, // Assuming no agent created this buyer
-            'created_at' => now(),
-            'updated_at' => now(),
-        ]);
+        // $buyer = DB::table('buyers')->insert([
+        //     'user_id' => $user_id,
+        //     'created_by_agent_id' => null, // Assuming no agent created this buyer
+        //     'created_at' => now(),
+        //     'updated_at' => now(),
+        // ]);
     }
 }

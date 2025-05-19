@@ -29,6 +29,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         return Inertia::render('DealsPage');
     })->name('transactions');
 
+
     // Route::middleware(['auth', 'verified'])->group(function () {
     // Route::get('/properties/create', function () {
     //     return Inertia::render('CreateProperty');
