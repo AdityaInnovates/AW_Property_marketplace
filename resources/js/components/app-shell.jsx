@@ -8,14 +8,7 @@ import Sidebar from './sidebar';
 //     ziggy?: any;
 // }
 
-export function AppShell({ children, variant = 'header', sidebarOpen, auth, ziggy }) {
-    // useEffect(() => {
-    //     console.log('Auth object:', auth);
-    // }, [auth]);
-    // useEffect(() => {
-    //     console.log(ziggy);
-    // }, [ziggy]);
-    // console.log({ auth });
+export function AppShell({ children, sidebarOpen, auth, ziggy }) {
     return (
         <div className="flex h-screen w-full">
             <Sidebar sidebarOpen={sidebarOpen} auth={auth} />
