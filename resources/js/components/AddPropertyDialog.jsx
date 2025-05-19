@@ -15,13 +15,15 @@ import { useState, useEffect } from "react";
 import { toast } from "react-toastify";
 import axiosInstance from "@/lib/axiosInstance";
 import { Plus } from "lucide-react";
+import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select"; // If you're using shadcn/ui
+
 
 const initialFormData = {
   title: "",
   property_type: "",
   sale_or_rent: "sale",
   owner_id: "",
-  created_by_agent: "",
+  agent_id: "",
   status: "available",
   verification_docs: null,
   address: {
@@ -42,10 +44,17 @@ export function AddPropertyDialog({ onCreated }) {
   const [formData, setFormData] = useState(initialFormData);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  
+const [owners, setOwners] = useState([]);
+const [agents, setAgents] = useState([]);
   useEffect(() => {
     if (!open) {
       setFormData(initialFormData);
-    }
+    } else {
+    
+    axiosInstance.get('/owners').then(({ data }) => setOwners(data));
+    axiosInstance.get('/agents').then(({ data }) => setAgents(data));
+  }
   }, [open]);
 
   const handleInputChange = (e) => {
@@ -78,7 +87,7 @@ export function AddPropertyDialog({ onCreated }) {
       data.append("property_type", formData.property_type);
       data.append("sale_or_rent", formData.sale_or_rent);
       data.append("owner_id", formData.owner_id);
-      data.append("created_by_agent", formData.created_by_agent);
+      data.append("agent_id", formData.agent_id);
       data.append("status", formData.status);
 
      if (formData.verification_docs) {
@@ -129,28 +138,64 @@ console.log(formData.verification_docs)
               <Input name="property_type" value={formData.property_type} onChange={handleInputChange} />
             </div>
             <div>
-              <Label>Sale or Rent</Label>
-              <select
-                name="sale_or_rent"
-                value={formData.sale_or_rent}
-                onChange={handleInputChange}
-                className="w-full p-2 border rounded"
-              >
-                <option value="sale">Sale</option>
-                <option value="rent">Rent</option>
-              </select>
-            </div>
+  <Label>Sale or Rent</Label>
+  <Select
+    value={formData.sale_or_rent}
+    onValueChange={(value) =>
+      setFormData((prev) => ({ ...prev, sale_or_rent: value }))
+    }
+  >
+    <SelectTrigger className="w-full border rounded p-2">
+      <SelectValue placeholder="Select option" />
+    </SelectTrigger>
+    <SelectContent>
+      <SelectItem value="sale">Sale</SelectItem>
+      <SelectItem value="rent">Rent</SelectItem>
+    </SelectContent>
+  </Select>
+</div>
+
             <div>
               <Label>Status</Label>
               <Input name="status" value={formData.status} onChange={handleInputChange} />
             </div>
             <div>
-              <Label>Owner ID</Label>
-              <Input name="owner_id" value={formData.owner_id} onChange={handleInputChange} />
+              <Label>Owner</Label>
+              {/* <Input name="owner_id" value={formData.owner_id} onChange={handleInputChange} /> */}
+              <Select
+    value={formData.owner_id}
+    onValueChange={(value) => setFormData((prev) => ({ ...prev, owner_id: value }))}
+  >
+    <SelectTrigger>
+      <SelectValue placeholder="Select owner" />
+    </SelectTrigger>
+    <SelectContent>
+      {owners.map((owner) => (
+        <SelectItem key={owner.id} value={String(owner.id)}>
+          {owner.user?.first_name} {owner.user?.last_name}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
             </div>
             <div>
-              <Label>Agent ID</Label>
-              <Input name="created_by_agent" value={formData.created_by_agent} onChange={handleInputChange} />
+              <Label>Agent</Label>
+              {/* <Input name="created_by_agent" value={formData.created_by_agent} onChange={handleInputChange} /> */}
+              <Select
+    value={formData.agent_id}
+    onValueChange={(value) => setFormData((prev) => ({ ...prev, agent_id: value }))}
+  >
+    <SelectTrigger>
+      <SelectValue placeholder="Select agent" />
+    </SelectTrigger>
+    <SelectContent>
+      {agents.map((agent) => (
+        <SelectItem key={agent.id} value={String(agent.id)}>
+          {agent.user?.first_name} {agent.user?.last_name}
+        </SelectItem>
+      ))}
+    </SelectContent>
+  </Select>
             </div>
             <div>
               <Label>Verification Docs</Label>
