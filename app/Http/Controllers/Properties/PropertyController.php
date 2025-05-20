@@ -184,7 +184,7 @@ public function store(Request $request)
         }
     }
 
- public function verify(Request $request, $id)
+ public function updatePropertyVerificationStatus(Request $request, $id)
 {
     try {
         $validator = Validator::make($request->all(), [

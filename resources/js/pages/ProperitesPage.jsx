@@ -1,6 +1,9 @@
+import { AddPropertyDialog } from '@/components/AddPropertyDialog';
+import { DialogBox } from '@/components/dialog-box';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { DialogClose } from '@/components/ui/dialog';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -12,42 +15,25 @@ import {
 import { Input } from '@/components/ui/input';
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from '@/components/ui/pagination';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { CheckCircle, Filter, Search, XCircle, Plus} from 'lucide-react';
+import { CheckCircle, Filter, Search, XCircle } from 'lucide-react';
 import { useEffect, useState } from 'react';
-import axiosInstance from '../lib/axiosInstance';
-import DefaultAxios from '../lib/DefaultAxios';
-import {AddPropertyDialog} from '@/components/AddPropertyDialog';
-import { DialogBox } from "@/components/dialog-box"; 
 import { toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-  DialogClose  
-} from '@/components/ui/dialog';
-
-
-
+import axiosInstance from '../lib/axiosInstance';
 
 const fetchProperties = async () => {
-  try {
-    const { data } = await axiosInstance.get('/properties');
-    setProperties(data); 
-  } catch (error) {
-    console.error("Failed to fetch properties:", error);
-    toast.error("Could not load properties.");
-  }
+    try {
+        const { data } = await axiosInstance.get('/properties');
+        setProperties(data);
+    } catch (error) {
+        console.error('Failed to fetch properties:', error);
+        toast.error('Could not load properties.');
+    }
 };
 
 const closeDialog = () => {
-  // logic to close a modal or popup
+    // logic to close a modal or popup
 };
-
 
 // Mock data for properties
 const properties = [
@@ -122,10 +108,12 @@ export default function PropertiesPage() {
             <div className="space-y-6">
                 <div className="flex items-center justify-between">
                     <h1 className="text-3xl font-bold">Properties</h1>
-                    <AddPropertyDialog onCreated={() => {
-                    // Re-fetch data when a new property is added
-                     axiosInstance.get('/properties').then(({ data }) => setProperties(data));}} />
-                    
+                    <AddPropertyDialog
+                        onCreated={() => {
+                            // Re-fetch data when a new property is added
+                            axiosInstance.get('/properties').then(({ data }) => setProperties(data));
+                        }}
+                    />
                 </div>
 
                 <Card>
@@ -187,109 +175,130 @@ export default function PropertiesPage() {
                                         {/* <TableHead className="text-right">Actions</TableHead> */}
                                     </TableRow>
                                 </TableHeader>
-                               <TableBody>
-  {Properties.map((property) => (
-    <DialogBox
-      key={property.id}
-      title="Property Information"
-      description={property.title}
-      footer={
-        <>
-          <DialogClose asChild>
-            <Button type="button" variant="outline">Close</Button>
-          </DialogClose>
-          <Button
-            onClick={async () => {
-              try {
-                await DefaultAxios.patch(`/properties/${property.id}/verify`, {
-                  is_verified: !property.is_verified,
-                });
-                toast.success(property.is_verified ? "Property blocked" : "Property verified");
-                (async () => {
-            var { data: axres } = await axiosInstance.get('/properties');
-            setProperties(axres);
-        })();
-              } catch {
-                toast.error("Server error occurred");
-              }
-              closeDialog?.(); 
-            }}
-            variant={property.is_verified ? "destructive" : ""}
-          >
-            {property.is_verified ? "Block Property" : "Verify Property"}
-          </Button>
-        </>
-      }
-      trigger={
-        <TableRow className="cursor-pointer">
-          <TableCell className="p-[1rem] font-medium">{property.title}</TableCell>
-          <TableCell className="p-[1rem]">{property.property_type}</TableCell>
-          <TableCell className="p-[1rem]">
-            <Badge variant={property.sale_or_rent === 'sale' ? 'default' : 'secondary'}>
-              {property.sale_or_rent}
-            </Badge>
-          </TableCell>
-          <TableCell className="p-[1rem]">
-            {property?.address?.city}, {property?.address?.state}
-          </TableCell>
-          <TableCell className="p-[1rem]">
-            {property?.owner?.developer_name
-          ?? (property?.owner?.user
-          ? `${property.owner.user.first_name} ${property.owner.user.last_name}`
-          : 'N/A')}
-          </TableCell>
+                                <TableBody>
+                                    {Properties.map((property) => (
+                                        <DialogBox
+                                            key={property.id}
+                                            title="Property Information"
+                                            description={property.title}
+                                            footer={
+                                                <>
+                                                    <DialogClose asChild>
+                                                        <Button type="button" variant="outline">
+                                                            Close
+                                                        </Button>
+                                                    </DialogClose>
+                                                    <Button
+                                                        onClick={async () => {
+                                                            try {
+                                                                await axiosInstance.patch(`/properties/${property.id}/verify`, {
+                                                                    is_verified: !property.is_verified,
+                                                                });
+                                                                toast.success(property.is_verified ? 'Property blocked' : 'Property verified');
+                                                                (async () => {
+                                                                    var { data: axres } = await axiosInstance.get('/properties');
+                                                                    setProperties(axres);
+                                                                })();
+                                                            } catch {
+                                                                toast.error('Server error occurred');
+                                                            }
+                                                            closeDialog?.();
+                                                        }}
+                                                        variant={property.is_verified ? 'destructive' : ''}
+                                                    >
+                                                        {property.is_verified ? 'Block Property' : 'Verify Property'}
+                                                    </Button>
+                                                </>
+                                            }
+                                            trigger={
+                                                <TableRow className="cursor-pointer">
+                                                    <TableCell className="p-[1rem] font-medium">{property.title}</TableCell>
+                                                    <TableCell className="p-[1rem]">{property.property_type}</TableCell>
+                                                    <TableCell className="p-[1rem]">
+                                                        <Badge variant={property.sale_or_rent === 'sale' ? 'default' : 'secondary'}>
+                                                            {property.sale_or_rent}
+                                                        </Badge>
+                                                    </TableCell>
+                                                    <TableCell className="p-[1rem]">
+                                                        {property?.address?.city}, {property?.address?.state}
+                                                    </TableCell>
+                                                    <TableCell className="p-[1rem]">
+                                                        {property?.owner?.developer_name ??
+                                                            (property?.owner?.user
+                                                                ? `${property.owner.user.first_name} ${property.owner.user.last_name}`
+                                                                : 'N/A')}
+                                                    </TableCell>
 
-          <TableCell className="p-[1rem]">
-            {property.is_verified ? (
-              <CheckCircle className="h-5 w-5 text-green-500" />
-            ) : (
-              <XCircle className="h-5 w-5 text-red-500" />
-            )}
-          </TableCell>
-          <TableCell className="p-[1rem]">
-            <Badge
-              variant={
-                property.status === 'active'
-                  ? 'default'
-                  : property.status === 'pending'
-                  ? 'outline'
-                  : 'secondary'
-              }
-            >
-              {property.status}
-            </Badge>
-          </TableCell>
-        </TableRow>
-      }
-    >
-      <div className="grid grid-cols-2 gap-4">
-        <div><strong>Title:</strong> {property.title}</div>
-        <div><strong>Type:</strong> {property.property_type}</div>
-        <div><strong>Sale or Rent:</strong> {property.sale_or_rent}</div>
-        <div><strong>Status:</strong> {property.status}</div>
-        <div><strong>Verified:</strong> {property.is_verified ? "Yes" : "No"}</div>
-        <div><strong>Owner:</strong> {(property.owner.user.first_name +' '+ property.owner.user?.last_name)|| "N/A"}</div>
-        <div><strong>Agent:</strong> {(property.agent.user.first_name +' '+ property.agent.user?.last_name)|| "N/A"}</div>
-        <div><strong>Address:</strong> {property.address?.street_line1}, {property.address?.city}</div>
-        <div><strong>Country:</strong> {property.address?.country}</div>
-        {property.verification_docs && (
-        <div><strong>Verification File:</strong>{" "}
-        <a
-        href={property.verification_docs}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-blue-500 underline"
-        >
-        Download
-        </a>
-      </div>
-)}
-
-      </div>
-    </DialogBox>
-  ))}
-</TableBody>
-
+                                                    <TableCell className="p-[1rem]">
+                                                        {property.is_verified ? (
+                                                            <CheckCircle className="h-5 w-5 text-green-500" />
+                                                        ) : (
+                                                            <XCircle className="h-5 w-5 text-red-500" />
+                                                        )}
+                                                    </TableCell>
+                                                    <TableCell className="p-[1rem]">
+                                                        <Badge
+                                                            variant={
+                                                                property.status === 'active'
+                                                                    ? 'default'
+                                                                    : property.status === 'pending'
+                                                                      ? 'outline'
+                                                                      : 'secondary'
+                                                            }
+                                                        >
+                                                            {property.status}
+                                                        </Badge>
+                                                    </TableCell>
+                                                </TableRow>
+                                            }
+                                        >
+                                            <div className="grid grid-cols-2 gap-4">
+                                                <div>
+                                                    <strong>Title:</strong> {property.title}
+                                                </div>
+                                                <div>
+                                                    <strong>Type:</strong> {property.property_type}
+                                                </div>
+                                                <div>
+                                                    <strong>Sale or Rent:</strong> {property.sale_or_rent}
+                                                </div>
+                                                <div>
+                                                    <strong>Status:</strong> {property.status}
+                                                </div>
+                                                <div>
+                                                    <strong>Verified:</strong> {property.is_verified ? 'Yes' : 'No'}
+                                                </div>
+                                                <div>
+                                                    <strong>Owner:</strong>{' '}
+                                                    {property.owner.user.first_name + ' ' + property.owner.user?.last_name || 'N/A'}
+                                                </div>
+                                                <div>
+                                                    <strong>Agent:</strong>{' '}
+                                                    {property.agent.user.first_name + ' ' + property.agent.user?.last_name || 'N/A'}
+                                                </div>
+                                                <div>
+                                                    <strong>Address:</strong> {property.address?.street_line1}, {property.address?.city}
+                                                </div>
+                                                <div>
+                                                    <strong>Country:</strong> {property.address?.country}
+                                                </div>
+                                                {property.verification_docs && (
+                                                    <div>
+                                                        <strong>Verification File:</strong>{' '}
+                                                        <a
+                                                            href={property.verification_docs}
+                                                            target="_blank"
+                                                            rel="noopener noreferrer"
+                                                            className="text-blue-500 underline"
+                                                        >
+                                                            Download
+                                                        </a>
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </DialogBox>
+                                    ))}
+                                </TableBody>
                             </Table>
                         </div>
 
