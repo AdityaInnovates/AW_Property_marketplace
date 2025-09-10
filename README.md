@@ -5,16 +5,16 @@
 This is the backend for the AM Properties project. The backend is built using Laravel and is designed to manage properties and agents.
 
 ## Features
-
+ 
 - **Backend:** The backend manages Users, Agents, Properties, Deals, Buyers, Owners, Addresses, and Property Media using PHP and PostgreSQL. It features RESTful API endpoints with full CRUD operations, Laravel's built-in authentication and authorization, and PostgreSQL as the primary database with migrations and seeders.
 - **Frontend:** Frontend is built with React.js, TailwindCSS, and Inertia.js for routing.
 
 ## Getting Started
-
+ 
 1. Clone the repository:
 
     ```bash
-    git clone <repository-url>
+    git clone <repository-url> 
     cd AM-Properties_Backend
     ```
 
@@ -22,8 +22,8 @@ This is the backend for the AM Properties project. The backend is built using La
 
     ```bash
     composer install
-    ```
-
+    ``` 
+ 
 3. Set up your laravel app key:
     ```bash
     php artisan key:generate
