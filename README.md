@@ -7,7 +7,7 @@ This is the backend for the AM Properties project. The backend is built using La
 ## Features
   
 - **Backend:** The backend manages Users, Agents, Properties, Deals, Buyers, Owners, Addresses, and Property Media using PHP and PostgreSQL. It features RESTful API endpoints with full CRUD operations, Laravel's built-in authentication and authorization, and PostgreSQL as the primary database with migrations and seeders.
-- **Frontend:** Frontend is built with React.js, TailwindCSS, and Inertia.js for routing. 
+- **Frontend:** Frontend is built with React.js, TailwindCSS, and Inertia.js for routing.  
  
 ## Getting Started
  
